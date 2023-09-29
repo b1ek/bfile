@@ -127,3 +127,18 @@ p {
 .btn:active {
     background: #323232;
 }
+
+
+.file-drag-n-drop {
+    width: 400px;
+    height: 400px;
+    background: var(--header-sec-color);
+    border-radius: 16px;
+    padding: var(--header-padding-x);
+}
+.file-drag-n-drop-inside {
+    padding: var(--header-padding-x);
+    border: 4px dotted #656565;
+    height: calc(100% - 32px - 8px);
+    border-radius: 16px;
+}

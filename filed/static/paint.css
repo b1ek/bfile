@@ -136,6 +136,7 @@ p {
     background: var(--header-sec-color);
     border-radius: 16px;
     padding: var(--header-padding-x);
+    transition: 250ms ease;
 }
 .file-drag-n-drop * { display: block }
 .file-drag-n-drop object { display: initial }
@@ -144,6 +145,7 @@ p {
     border: 4px dotted #656565;
     height: calc(100% - 32px - 8px);
     border-radius: 16px;
+    transition: 250ms ease;
 }
 .file-drag-n-drop .file-drag-n-drop-inside .file-drag-n-drop-inside-text {
     margin: 0;
@@ -152,4 +154,10 @@ p {
     transform: translateY(-50%);
     text-align: center;
     line-height: 32px;
+}
+
+@media (max-width:513px) {
+    .file-drag-n-drop {
+        width: calc(100% - 32px);
+    }
 }

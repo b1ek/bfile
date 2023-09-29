@@ -137,6 +137,7 @@ p {
     border-radius: 16px;
     padding: var(--header-padding-x);
     transition: 250ms ease;
+    margin-bottom: 0;
 }
 .file-drag-n-drop * { display: block }
 .file-drag-n-drop object { display: initial }
@@ -155,9 +156,32 @@ p {
     text-align: center;
     line-height: 32px;
 }
+.mobile-file-upload-btn {
+    opacity: 0;
+    height: 0;
+    width: 0;
+    clip-path: inset(0 0 0 0);
+    font-size: 0;
+    padding: 0;
+}
 
-@media (max-width:513px) {
+@media (max-width:667px) {
     .file-drag-n-drop {
-        width: calc(100% - 32px);
+        opacity: 0;
+        clip-path: inset(0 0 0 0);
+        width: 0;
+        height: 0;
+        font-size: 0;
+        padding: 0;
+    }
+    .mobile-file-upload-btn {
+        width: fit-content;
+        height: fit-content;
+        opacity: 1;
+        font-size: initial;
+        padding: var(--header-padding-y);
+    }
+    .bfile-formupload-file-delete-pick {
+        margin-bottom: 28px;
     }
 }

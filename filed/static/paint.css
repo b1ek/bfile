@@ -136,6 +136,7 @@ p {
 
 .file-drag-n-drop {
     display: block;
+    cursor: pointer;
     width: 400px;
     height: 400px;
     background: var(--header-sec-color);
@@ -143,6 +144,9 @@ p {
     padding: var(--header-padding-x);
     transition: 250ms ease;
     margin-bottom: 0;
+}
+.file-drag-n-drop:hover {
+    background: #393939;
 }
 .file-drag-n-drop * { display: block }
 .file-drag-n-drop object { display: initial }
@@ -208,6 +212,4 @@ p {
 .footer td .btn {
     display: block;
     padding: 8px;
-    /* width: 100%; */
-    /* height: 100%; */
 }

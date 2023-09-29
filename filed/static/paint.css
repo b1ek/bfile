@@ -1,0 +1,114 @@
+html, body {
+    margin: 0; padding: 0;
+    font-family: 'Red Hat Display', 'Open Sans', 'Segoe UI', sans-serif;
+    background: var(--header-color);
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    color: var(--fg-color)
+}
+::-webkit-scrollbar {
+    display: none;
+}
+
+:root {
+    --accent-color: #78aeed;
+    --accent-bg-color: #3584e4;
+    --accent-fg-color: #ffffff;
+    --accent-font: 'Red Hat Display';
+    --accent-font-size: 18pt;
+    --accent-weight: 900;   
+
+    --header-color: #303030;
+    --header-fg-color: #ffffff;
+    --header-sec-color: #404040;
+    --header-padding-x: 16px;
+    --header-padding-y: 12px;
+    --header-font-size: 12pt;
+
+    --view-color: #1e1e1e;
+
+    --fg-color: #ffffff;
+    --margin: 12px 24px;
+    --margin-y: 12px;
+    --margin-x: 24px;
+}
+
+.header {
+    background: transparent;
+    color: var(--header-fg-color);
+    /* border-bottom: 1px solid var(--header-sec-color); */
+    font-family: var(--accent-font);
+    font-weight: var(--accent-weight);
+    font-size: var(--header-font-size);
+    padding: var(--header-padding-y) var(--header-padding-x);
+}
+.header svg {
+    width: var(--header-font-size);
+    height: var(--header-font-size);
+    transform: translateY(2px);
+    padding-right: var(--header-padding-y);
+}
+
+.content {
+    background: var(--view-color);
+    border-top: 1px solid var(--header-sec-color);
+    height: 100vh;
+    border-radius: 12px 12px 0 0;
+    padding: var(--margin-y) 0;
+}
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5 {
+    margin: var(--margin);
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: var(--accent-font);
+    font-size: var(--accent-font-size);
+    font-weight: var(--accent-weight);
+}
+h2 {
+    font-size: var(--accent-font-size);
+    font-weight: var(--accent-weight);
+}
+h3 {
+    font-size: calc(var(--accent-font-size) * 0.9);
+    font-weight: 600;
+}
+h4 {
+    font-size: calc(var(--accent-font-size) * 0.8);
+    font-weight: 600;
+}
+
+b {
+    font-weight: bold;
+    font-size: 90%;
+}
+
+p {
+    margin: var(--margin-y) 0;
+}
+
+.card {
+    background: var(--header-color);
+    border: 1px solid var(--header-sec-color);
+    border-radius: 12px;
+}
+.card-title {
+    border-radius: 12px 12px 0 0;
+    background: #292929;
+    padding: var(--header-padding-x) var(--header-padding-x);
+    font-size: var(--header-font-size);
+    font-weight: var(--accent-weight);
+    border-bottom: 1px solid var(--header-sec-color);
+}
+.card-text {
+    padding: var(--margin-y) var(--header-padding-x);
+}
+.card-text p {
+    margin-left: 0;
+}

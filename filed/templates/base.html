@@ -2,11 +2,22 @@
 <html lang="en_US">
     <head>
         <meta charset="utf8" />
+        <link rel="stylesheet" href="https://unpkg.com/reset-css@5.0.1/reset.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;600;900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="/paint.css" />
         <title>blek! File</title>
-        {% block content %}{% endblock %}
+        {% block head %}{% endblock %}
     </head>
 
     <body>
-        {% block body %}{% endblock %}
+        <div class="header">
+            {% include "text-x-generic.svg" %}
+            blek! File - a minute file sharing
+        </div>
+        <div class="content">
+            {% block body %}{% endblock %}
+        </div>
     </body>
 </html>

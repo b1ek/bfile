@@ -112,3 +112,18 @@ p {
 .card-text p {
     margin-left: 0;
 }
+
+.btn {
+    border-radius: 12px;
+    background: var(--header-sec-color);
+    padding: var(--header-padding-y);
+    border: 0px solid transparent;
+    color: var(--accent-fg-color);
+    transition: 250ms ease;
+}
+.btn:hover {
+    background: #393939;
+}
+.btn:active {
+    background: #323232;
+}

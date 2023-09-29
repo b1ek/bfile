@@ -34,10 +34,16 @@
                             <span class="file-drag-n-drop-inside">
                                 <span class="file-drag-n-drop-inside-text">
                                     <object data="/tab-new-symbolic.svg" width="32" height="32"></object><br/>
-                                    Drag & drop your files here!
+                                    <span id='drag-n-drop-jsonly' style='display:none'>
+                                        Drag & drop your files here!
+                                    </span>
+                                    <noscript>
+                                        Click to upload your files!
+                                    </noscript>
                                 </span>
                             </span>
                         </span>
+                        <script src="/dragndrop-form.js"></script>
                     </label>
                 </p>
             </form>

@@ -130,15 +130,26 @@ p {
 
 
 .file-drag-n-drop {
+    display: block;
     width: 400px;
     height: 400px;
     background: var(--header-sec-color);
     border-radius: 16px;
     padding: var(--header-padding-x);
 }
-.file-drag-n-drop-inside {
+.file-drag-n-drop * { display: block }
+.file-drag-n-drop object { display: initial }
+.file-drag-n-drop .file-drag-n-drop-inside {
     padding: var(--header-padding-x);
     border: 4px dotted #656565;
     height: calc(100% - 32px - 8px);
     border-radius: 16px;
+}
+.file-drag-n-drop .file-drag-n-drop-inside .file-drag-n-drop-inside-text {
+    margin: 0;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    line-height: 32px;
 }

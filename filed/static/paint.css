@@ -157,6 +157,7 @@ p {
     line-height: 32px;
 }
 .mobile-file-upload-btn {
+    display: block;
     opacity: 0;
     height: 0;
     width: 0;
@@ -175,7 +176,8 @@ p {
         padding: 0;
     }
     .mobile-file-upload-btn {
-        width: fit-content;
+        width: calc(100% - 24px);
+        cursor: pointer;
         height: fit-content;
         opacity: 1;
         font-size: initial;

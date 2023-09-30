@@ -140,6 +140,10 @@ p {
     background: #323232;
 }
 
+.btn-fill {
+    width: 100%;
+}
+
 
 .file-drag-n-drop {
     display: block;
@@ -176,9 +180,8 @@ p {
     display: block;
     opacity: 0;
     height: 0;
-    width: 0;
+    width: calc(100% - 24px);
     clip-path: inset(0 0 0 0);
-    font-size: 0;
     padding: 0;
 }
 
@@ -186,18 +189,15 @@ p {
     .file-drag-n-drop {
         opacity: 0;
         clip-path: inset(0 0 0 0);
-        width: 0;
         height: 0;
-        font-size: 0;
         padding: 0;
     }
     .mobile-file-upload-btn {
-        width: calc(100% - 24px);
         cursor: pointer;
         height: fit-content;
         opacity: 1;
-        font-size: initial;
         padding: var(--header-padding-y);
+        text-align: center;
     }
     .bfile-formupload-file-delete-pick {
         margin-bottom: 28px;

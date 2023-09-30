@@ -2,64 +2,66 @@
 
 {% block body %}
 
-<h1>File upload</h1>
-<div style='margin:var(--margin)'>
-    <p>
-        You can upload a file here <b>for free</b> to share with others for 30 minutes.<br/>
-        How cool is that, eh?
-    </p>
-    <div class="card">
-        <div class="card-title">
-            Upload form
-        </div>
-        <div class='card-text'>
-            <form action="/upload" method="POST" enctype="multipart/form-data">
-                <p>
-                    I want my file deleted:
-                </p>
-                <ul class="bfile-formupload-file-delete-pick">
-                    <li>
-                        <input type="radio" id="bfile-formupload-delete-30-min" name="delmode" value='30' checked />
-                        <label for="bfile-formupload-delete-30-min">After 30 minutes</label>
-                    </li>
-                    <li>
-                        <input type="radio" id="bfile-formupload-delete-dl" name="delmode" value='dl' />
-                        <label for="bfile-formupload-delete-dl">After 30 minutes OR a download</label>
-                    </li>
-                </ul>
-                <p>
-                    <input type="file" name="file" id="bfile-formupload-file" style="display: none" />
-                    <label for="bfile-formupload-file">
-                        <span class='btn btn-fill mobile-file-upload-btn'>
-                            Select a file
-                        </span>
-                        <span class="file-drag-n-drop">
-                            <span class="file-drag-n-drop-inside">
-                                <span class="file-drag-n-drop-inside-text">
-                                    <object data="/tab-new-symbolic.svg" width="32" height="32"></object><br/>
-                                    <span style="line-height:16pt">
-                                        <span id='drag-n-drop-jsonly' style='display:none'>
-                                            Drag & drop your files here!
-                                        </span>
-                                        <noscript>
-                                            Click to upload your files!<br/>
-                                            <span style="font-size: 70%">
-                                                You will be able to drag and drop if you enable JS
+<div style="max-width:95vw;width:fit-content;margin:0 auto">
+    <h1 style="text-align:center">File upload</h1>
+    <div style='margin:var(--margin)'>
+        <p>
+            You can upload a file here <b>for free</b> to share with others for 30 minutes.<br/>
+            How cool is that, eh?
+        </p>
+        <div class="card">
+            <div class="card-title">
+                Upload form
+            </div>
+            <div class='card-text'>
+                <form action="/upload" method="POST" enctype="multipart/form-data">
+                    <p>
+                        I want my file deleted:
+                    </p>
+                    <ul class="bfile-formupload-file-delete-pick">
+                        <li>
+                            <input type="radio" id="bfile-formupload-delete-30-min" name="delmode" value='30' checked />
+                            <label for="bfile-formupload-delete-30-min">After 30 minutes</label>
+                        </li>
+                        <li>
+                            <input type="radio" id="bfile-formupload-delete-dl" name="delmode" value='dl' />
+                            <label for="bfile-formupload-delete-dl">After 30 minutes OR a download</label>
+                        </li>
+                    </ul>
+                    <p>
+                        <input type="file" name="file" id="bfile-formupload-file" style="display: none" />
+                        <label for="bfile-formupload-file">
+                            <span class='btn btn-fill mobile-file-upload-btn'>
+                                Select a file
+                            </span>
+                            <span class="file-drag-n-drop">
+                                <span class="file-drag-n-drop-inside">
+                                    <span class="file-drag-n-drop-inside-text">
+                                        <object data="/tab-new-symbolic.svg" width="32" height="32"></object><br/>
+                                        <span style="line-height:16pt">
+                                            <span id='drag-n-drop-jsonly' style='display:none'>
+                                                Drag & drop your files here!
                                             </span>
-                                        </noscript>
+                                            <noscript>
+                                                Click to upload your files!<br/>
+                                                <span style="font-size: 70%">
+                                                    You will be able to drag and drop if you enable JS
+                                                </span>
+                                            </noscript>
+                                        </span>
                                     </span>
                                 </span>
                             </span>
-                        </span>
-                        <script src="/dragndrop-form.js"></script>
-                    </label>
-                </p>
-                <p>
-                    <button class='btn btn-fill'>
-                        Upload!
-                    </button>
-                </p>
-            </form>
+                            <script src="/dragndrop-form.js"></script>
+                        </label>
+                    </p>
+                    <p>
+                        <button class='btn btn-fill'>
+                            Upload!
+                        </button>
+                    </p>
+                </form>
+            </div>
         </div>
     </div>
 </div>

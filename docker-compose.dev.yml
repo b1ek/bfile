@@ -16,6 +16,13 @@ services:
             - 80:80
         networks:
             bfile:
+    redis:
+        image: redis:alpine
+        networks:
+            bfile:
+        command: [ 'redis-server', '--requirepass', '$REDIS_PASS' ]
+        ports:
+            - 6379:6379
         
 networks:
     bfile:

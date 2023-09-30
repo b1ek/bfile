@@ -1,13 +1,14 @@
 # --- build ---
-FROM rust:alpine as builder
+FROM rust as builder
 
-WORKDIR /opt/build
+WORKDIR /opt/code
 COPY . .
 
-RUN cargo b -r
+# No build or install is done during this step
+# since the directory will be mounted anyways
+# to the dev's machine.
 
-# --- deploy ---
-FROM alpine
+# Therefore installing & compiling in the dockerfile
+# would be moronic, to say at least
 
-COPY --from=builder /opt/build/target/release/filed /bin/filed
-CMD [ "/bin/filed" ]
+CMD [ "dev-entry.sh" ]

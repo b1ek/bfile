@@ -148,13 +148,15 @@ p {
 .file-drag-n-drop {
     display: block;
     cursor: pointer;
-    width: 400px;
-    height: 400px;
+    width: 440px;
+    height: 440px;
     background: var(--header-sec-color);
     border-radius: 16px;
     padding: var(--header-padding-x);
     transition: 250ms ease;
     margin-bottom: 0;
+    border: 0px solid transparent;
+    color: var(--header-fg-color);
 }
 .file-drag-n-drop:hover {
     background: #393939;

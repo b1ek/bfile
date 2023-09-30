@@ -31,14 +31,16 @@
                     <p>
                         <label class="fancycheckbox">
                             <input type="checkbox" name="named">
-                            I also want my file named:
-                            <span class="form-input-partial">
-                                <span class="form-input-label">
-                                    file.blek.codes/
-                                </span>
-                                <input style="max-width:100px" type="text" name="filename" placeholder="file.txt"></input>
-                            </span>
                         </label>
+                        <label for="bfile-formupload-file-name">
+                            I also want my file named:
+                        </label>
+                        <span class="form-input-partial">
+                            <span class="form-input-label">
+                                file.blek.codes/
+                            </span>
+                            <input style="max-width:100px" id='bfile-formupload-file-name' type="text" name="filename" placeholder="file.txt"></input>
+                        </span>
                     </p>
                     <p>
                         <input type="file" name="file" id="bfile-formupload-file" style="display: none" />
@@ -46,10 +48,10 @@
                             <span class='btn btn-fill mobile-file-upload-btn'>
                                 Select a file
                             </span>
-                            <span class="file-drag-n-drop">
+                            <button type="button" class="file-drag-n-drop">
                                 <span class="file-drag-n-drop-inside">
                                     <span class="file-drag-n-drop-inside-text">
-                                        <object data="/tab-new-symbolic.svg" width="32" height="32"></object><br/>
+                                        <object data="/tab-new-symbolic.svg" width="32" height="32" tabindex="-1"></object><br/>
                                         <span style="line-height:16pt">
                                             <span id='drag-n-drop-jsonly' style='display:none'>
                                                 Drag & drop your files here!
@@ -63,7 +65,7 @@
                                         </span>
                                     </span>
                                 </span>
-                            </span>
+                            </button>
                             <script src="/dragndrop-form.js"></script>
                         </label>
                     </p>

@@ -26,6 +26,10 @@
             input_el.files = transfer.files;
         }
 
+        root_drag_rop.onclick = e => {
+            input_el.click();
+        }
+
         input_el.onchange = e => {
             const file = input_el.files[0]
             selectFile(file);

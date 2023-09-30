@@ -7,9 +7,7 @@ use askama::Template;
 
 #[derive(Template)]
 #[template( path = "index.html" )]
-struct Index {
-
-}
+struct Index {}
 
 pub fn index() -> Html<String> {
     let rendered = Index {};

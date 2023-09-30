@@ -9,11 +9,15 @@ use warp::{Filter, reply::Reply, reject::Rejection};
 use crate::env::Env;
 
 mod pages;
+mod forms;
 
 pub fn routes() -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
     let staticpath = current_dir().unwrap();
     let staticpath = staticpath.to_str().unwrap().to_string() + "/static";
-    pages::get_routes().or(warp::fs::dir(staticpath.to_string()))
+
+    pages::get_routes()
+        .or(forms::get_routes())
+        .or(warp::fs::dir(staticpath.to_string()))
 }
 
 /*

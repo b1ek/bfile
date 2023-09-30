@@ -1,5 +1,7 @@
 #!/bin/sh
 
+cd /opt/code
+
 cargo check
 cargo build
 

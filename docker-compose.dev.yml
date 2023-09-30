@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+    filed:
+        build:
+            context: filed
+            dockerfile: Dockerfile.dev
+        networks:
+            bfile:
+        volumes:
+            - './filed:/opt/code'
+    caddy:
+        image: caddy:alpine
+        volumes:
+            - './conf/caddy:/etc/caddy:ro'
+        ports:
+            - 80:80
+        networks:
+            bfile:
+        
+networks:
+    bfile:

@@ -1,0 +1,34 @@
+.form-input-partial {
+    background: var(--header-fg-color);
+    color: var(--header-color);
+    padding: 2px 6px;
+    border-radius: 6px;
+    width: fit-content;
+}
+.form-input-partial input[type=text] {
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    height: 100%;
+    transform: translateX(-4px);
+    font-family: 'Red Hat Display';
+}
+.form-input-label {
+    user-select: none;
+    font-size: 90%;
+}
+@media (max-width:667px) {
+    .form-input-label {
+        display: none;
+    }
+    .form-input-partial {
+        background: transparent;
+        padding: 0;
+        border-radius: 0;
+    }
+    .form-input-partial input[type=text] {
+        border-radius: 5px;
+        padding: 2px 4px;
+        margin-left: 5px;
+    }
+}

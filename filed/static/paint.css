@@ -220,3 +220,14 @@ p {
     display: block;
     padding: 8px;
 }
+
+input[type=text],
+input[type=password],
+input[type=email] {
+    background: var(--header-fg-color);
+    color: var(--header-color);
+    border: 0px solid transparent;
+    border-radius: 5px;
+    padding: 2px 4px;
+    outline: none;
+}

@@ -10,6 +10,9 @@
         const drag_rop = document.getElementsByClassName('file-drag-n-drop-inside')[0];
         const dr_rop_t = document.getElementsByClassName('file-drag-n-drop-inside-text')[0];
 
+        /** @type {HTMLInputElement} */
+        const input_el = document.getElementById('bfile-formupload-file');
+
         function drag_end() {
             root_drag_rop.style.background = 'var(--header-sec-color)'
             drag_rop.style.borderColor = '#656565';
@@ -31,14 +34,16 @@
             if (!drdrop_enabled) return;
 
             if (e.dataTransfer.items) {
-                for (let i = 0; i != e.dataTransfer.items.length; i++) {
-                    let file = e.dataTransfer.items[i].getAsFile();
-                    text.innerText = 'Processing...';
-                    drdrop_enabled = false;
-                    await fill_bg();
-                    drdrop_enabled = true;
-                    text.innerText = `Selected file: ${file.name.substring(0,16)}${file.name.length > 16 ? '...' : ''}\nYou can drop another file to replace this one`;
-                }
+                let file = e.dataTransfer.items[0].getAsFile();
+                text.innerText = 'Processing...';
+                drdrop_enabled = false;
+                await fill_bg();
+                drdrop_enabled = true;
+                text.innerText = `Selected file: ${file.name.substring(0,16)}${file.name.length > 16 ? '...' : ''}\nYou can drop another file to replace this one`;
+
+                const transfer = new DataTransfer();
+                transfer.items.add(file);
+                input_el.files = transfer.files;
             }
         });
         drag_rop.addEventListener('dragover', e => {

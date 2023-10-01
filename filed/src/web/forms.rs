@@ -6,7 +6,7 @@
 use std::collections::HashMap;
 
 use askama::Template;
-use warp::{Filter, reply::{Reply, Html}, reject::Rejection, filters::multipart::FormData, http::StatusCode, Error};
+use warp::{Filter, reply::Reply, reject::Rejection, filters::multipart::FormData, http::StatusCode};
 use futures_util::TryStreamExt;
 use bytes::BufMut;
 

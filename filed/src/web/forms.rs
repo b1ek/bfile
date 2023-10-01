@@ -3,7 +3,7 @@
  forms.rs - All the forms
 */
 
-use std::{collections::HashMap, string::FromUtf8Error};
+use std::collections::HashMap;
 
 use askama::Template;
 use warp::{Filter, reply::Reply, reject::Rejection, filters::multipart::FormData, http::StatusCode};
@@ -62,7 +62,7 @@ pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>
     }
 
     let data = params.get("file").unwrap();
-    let delmode = params.get("delmode").unwrap();
+    let _delmode = params.get("delmode").unwrap();
     let named = params.get("named");
     let filename = params.get("filename").unwrap();
     let mut is_named = named.is_none();

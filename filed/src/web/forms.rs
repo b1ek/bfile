@@ -5,11 +5,13 @@
 
 use std::collections::HashMap;
 
-use warp::{Filter, reply::{Html, Reply}, reject::Rejection, filters::multipart::FormData};
+use warp::{Filter, reply::Reply, reject::Rejection, filters::multipart::FormData};
 use futures_util::TryStreamExt;
 use bytes::BufMut;
 
-pub async fn upload(form: FormData) -> Result<Box<dyn Reply>, Rejection> {
+use super::state::SharedState;
+
+pub async fn upload(form: FormData, _state: SharedState) -> Result<Box<dyn Reply>, Rejection> {
 
     let params: HashMap<String, String> = form.and_then(|mut field| async move {
         let mut bytes: Vec<u8> = vec![];
@@ -23,8 +25,10 @@ pub async fn upload(form: FormData) -> Result<Box<dyn Reply>, Rejection> {
     Ok(Box::new(warp::reply::json(&params)))
 }
 
-pub fn get_routes() -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
+pub fn get_routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
     warp::post().and(
-        warp::multipart::form().and_then(upload)
+        warp::multipart::form()
+            .and(warp::any().map(move || state.clone()))
+            .and_then(upload)
     )
 }

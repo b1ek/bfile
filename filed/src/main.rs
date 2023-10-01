@@ -4,6 +4,7 @@
 
 mod env;
 mod web;
+mod db;
 
 #[tokio::main]
 async fn main() {

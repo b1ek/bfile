@@ -12,5 +12,6 @@ dotenvy = "0.15.7"
 femme = "2.2.1"
 futures-util = "0.3.28"
 log = "0.4.20"
+redis = { version = "0.23.3", features = ["tokio"] }
 tokio = { version = "1.32.0", features = ["rt", "macros", "rt-multi-thread"] }
 warp = "0.3.6"

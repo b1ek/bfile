@@ -10,13 +10,16 @@ use crate::env::Env;
 
 mod pages;
 mod forms;
+mod state;
 
-pub fn routes() -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
+use state::SharedState;
+
+pub fn routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
     let staticpath = current_dir().unwrap();
     let staticpath = staticpath.to_str().unwrap().to_string() + "/static";
 
-    pages::get_routes()
-        .or(forms::get_routes())
+    pages::get_routes(state.clone())
+        .or(forms::get_routes(state))
         .or(warp::fs::dir(staticpath.to_string()))
 }
 
@@ -27,5 +30,9 @@ pub async fn serve(env: Env) {
 
     log::info!("Listening on {}", env.listen.to_string());
 
-    warp::serve(routes()).run(env.listen).await;
+    let state = SharedState {
+        redis_cli: crate::db::redis_conn(env.clone()).unwrap()
+    };
+
+    warp::serve(routes(state)).run(env.listen).await;
 }

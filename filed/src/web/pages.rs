@@ -13,18 +13,22 @@ use super::{state::SharedState, rejection::HttpReject};
 
 #[derive(Template)]
 #[template( path = "index.html" )]
-pub struct Index {}
+pub struct Index {
+    env: Env
+}
 
 #[derive(Template)]
 #[template( path = "bad_action_req.html" )]
-pub struct BadActionReq {}
+pub struct BadActionReq {
+    env: Env
+}
 
 #[derive(Template)]
 #[template( path = "uploaded.html" )]
 #[allow(dead_code)]
 pub struct Uploaded {
     file: String,
-    instance_url: String
+    env: Env
 }
 
 
@@ -36,7 +40,7 @@ pub async fn uploaded(query: HashMap<String, String>, state: SharedState) -> Res
 
     let rendered = Uploaded {
         file: query.get("file").unwrap().clone(),
-        instance_url: state.env.instanceurl.clone()
+        env: state.env.clone()
     };
     Ok(warp::reply::html(rendered.render().map_err(|err| warp::reject::custom(HttpReject::AskamaError(err)))?))
 }
@@ -50,16 +54,20 @@ pub fn uploaded_f(state: SharedState) -> impl Filter<Extract = impl Reply, Error
         .and_then(uploaded)
 }
 
-pub async fn index() -> Result<Html<String>, Rejection> {
-    let rendered = Index {};
+pub async fn index(state: SharedState) -> Result<Html<String>, Rejection> {
+    let rendered = Index {
+        env: state.env.clone()
+    };
     Ok(warp::reply::html(rendered.render().map_err(|err| warp::reject::custom(HttpReject::AskamaError(err)))?))
 }
 
-pub fn index_f() -> impl Filter<Extract = impl Reply, Error = warp::Rejection> + Clone {
-    warp::path::end().and_then(index)
+pub fn index_f(state: SharedState) -> impl Filter<Extract = impl Reply, Error = warp::Rejection> + Clone {
+    warp::path::end()
+        .map(move || state.clone())
+        .and_then(index)
 }
 
 pub fn get_routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
-    index_f()
-        .or(uploaded_f(state))
+    index_f(state.clone())
+        .or(uploaded_f(state.clone()))
 }

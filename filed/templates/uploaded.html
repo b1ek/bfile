@@ -10,11 +10,11 @@
         <div class="card-text">
             <p>
                 The file is accessible via this link:
-                <a href='{{ instance_url }}/file/{{ file }}'>{{ instance_url }}/file/{{ file }}</a>
+                <a href='{{ env.instanceurl }}/file/{{ file }}'>{{ env.instanceurl }}/file/{{ file }}</a>
             </p>
 
             <p class="js-only">
-                <button class="btn btn-fill" style="cursor:pointer" id="copylink" data-clipboard-text="{{ instance_url }}/file/{{ file }}">
+                <button class="btn btn-fill" style="cursor:pointer" id="copylink" data-clipboard-text="{{ env.instanceurl }}/file/{{ file }}">
                     Copy link
                 </button>
             </p>

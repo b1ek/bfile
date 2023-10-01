@@ -10,11 +10,11 @@
         <div class="card-text">
             <p>
                 The file is accessible via this link:
-                <a href='/file/{{ file }}'>file.blek.codes/file/{{ file }}</a>
+                <a href='{{ instance_url }}/file/{{ file }}'>{{ instance_url }}/file/{{ file }}</a>
             </p>
 
             <p class="js-only">
-                <button class="btn btn-fill" style="cursor:pointer" id="copylink" data-clipboard-text="https://file.blek.codes/file/{{ file }}">
+                <button class="btn btn-fill" style="cursor:pointer" id="copylink" data-clipboard-text="{{ instance_url }}/file/{{ file }}">
                     Copy link
                 </button>
             </p>

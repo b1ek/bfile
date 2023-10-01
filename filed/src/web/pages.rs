@@ -9,7 +9,12 @@ use super::state::SharedState;
 
 #[derive(Template)]
 #[template( path = "index.html" )]
-struct Index {}
+pub struct Index {}
+
+#[derive(Template)]
+#[template( path = "bad_action_req.html" )]
+pub struct BadActionReq {}
+
 
 pub fn index() -> Html<String> {
     let rendered = Index {};

@@ -11,6 +11,7 @@ use crate::env::Env;
 mod pages;
 mod forms;
 mod state;
+mod rejection;
 
 use state::SharedState;
 

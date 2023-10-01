@@ -3,7 +3,7 @@
  This file provides the `loadenv` function that will do just that.
  */
 
-use std::{env::var, net::SocketAddr};
+use std::{env::var, net::SocketAddr, path::Path};
 
 #[derive(Debug, Clone)]
 pub struct Redis {
@@ -18,6 +18,7 @@ pub struct Env {
     pub logging: bool,
     pub listen: SocketAddr,
     pub redis: Redis,
+    pub filedir: String
 }
 
 fn get_var<T: Into<String>, O: From<String>>(name: T) -> Result<O, String> {
@@ -39,7 +40,21 @@ pub fn loadenv() -> Result<Env, Box<dyn std::error::Error>> {
                 host: get_var("REDIS_HOST")?,
                 port: get_var::<&str, String>("REDIS_PORT")?.parse().unwrap(),
                 prefix: get_var("REDIS_PREFIX")?
+            },
+            filedir: {
+                let spath: String = get_var("USERCONTENT_DIR")?;
+                let path = Path::new(&spath);
+                if ! path.exists() {
+                    return Err(format!("USERCONTENT_DIR is set to \"{}\", which does not exist!", &spath).into())
+                }
+                spath
             }
         }
     )
+}
+
+impl Env {
+    pub fn usercontent_dir(self: &Self) -> Box<&Path> {
+        Box::new(Path::new(&self.filedir))
+    }
 }

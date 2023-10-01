@@ -2,6 +2,7 @@
 #![warn(clippy::suspicious)]
 #![warn(clippy::correctness)]
 
+mod files;
 mod env;
 mod web;
 mod db;

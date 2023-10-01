@@ -2,10 +2,12 @@
  pages.rs - All the HTML pages
 */
 
-use warp::{reply::{Reply, Html}, Filter, reject::Rejection};
+use std::{collections::HashMap, convert::Infallible};
+
+use warp::{reply::{Reply, Html}, Filter, reject::{Rejection, Reject}};
 use askama::Template;
 
-use super::state::SharedState;
+use super::{state::SharedState, rejection::HttpReject};
 
 #[derive(Template)]
 #[template( path = "index.html" )]
@@ -15,14 +17,42 @@ pub struct Index {}
 #[template( path = "bad_action_req.html" )]
 pub struct BadActionReq {}
 
+#[derive(Template)]
+#[template( path = "uploaded.html" )]
+#[allow(dead_code)]
+pub struct Uploaded {
+    file: String
+}
 
-pub fn index() -> Html<String> {
+
+pub async fn uploaded(query: HashMap<String, String>) -> Result<Html<String>, Rejection> {
+
+    if ! query.contains_key("file") {
+        return Err(warp::reject());
+    }
+
+    let rendered = Uploaded {
+        file: query.get("file").unwrap().clone()
+    };
+    Ok(warp::reply::html(rendered.render().map_err(|err| warp::reject::custom(HttpReject::AskamaError(err)))?))
+}
+
+pub fn uploaded_f() -> impl Filter<Extract = impl Reply, Error = warp::Rejection> + Clone {
+    warp::path("uploaded")
+        .and(warp::query::<HashMap<String, String>>())
+        .and_then(uploaded)
+}
+
+pub async fn index() -> Result<Html<String>, Rejection> {
     let rendered = Index {};
-    warp::reply::html(rendered.render().unwrap())
+    Ok(warp::reply::html(rendered.render().map_err(|err| warp::reject::custom(HttpReject::AskamaError(err)))?))
+}
+
+pub fn index_f() -> impl Filter<Extract = impl Reply, Error = warp::Rejection> + Clone {
+    warp::path::end().and_then(index)
 }
 
 pub fn get_routes(_state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
-    let index_r = warp::path::end().map(index);
-
-    warp::any().and(index_r)
+    index_f()
+        .or(uploaded_f())
 }

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div style="margin:0 12px">
+    <div class="card" style="width: fit-content; margin:0 auto">
+        <div class="card-title">
+            Successfully uploaded a file
+        </div>
+        <div class="card-text">
+            <p>
+                The file is accessible via this link:
+                <a href='/file/{{ file }}'>file.blek.codes/file/{{ file }}</a>
+            </p>
+
+            <p class="js-only">
+                <button class="btn btn-fill" style="cursor:pointer" id="copylink" data-clipboard-text="https://file.blek.codes/file/{{ file }}">
+                    Copy link
+                </button>
+            </p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="https://unpkg.com/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+    (() => {
+        new ClipboardJS('#copylink');
+    })()
+</script>
+
+{% endblock %}

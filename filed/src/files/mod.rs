@@ -1,4 +1,3 @@
-// this whole crate is just a boilerplate
 #![allow(unused)]
 
 use std::{sync::Arc, error::Error, ops::Add};

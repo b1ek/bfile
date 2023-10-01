@@ -3,7 +3,7 @@
  forms.rs - All the forms
 */
 
-use std::collections::HashMap;
+use std::{collections::HashMap, string::FromUtf8Error};
 
 use askama::Template;
 use warp::{Filter, reply::Reply, reject::Rejection, filters::multipart::FormData, http::StatusCode};
@@ -11,7 +11,7 @@ use futures_util::TryStreamExt;
 use bytes::BufMut;
 use serde::Serialize;
 
-use crate::files::File;
+use crate::files::{File, lookup::LookupKind};
 
 use super::{state::SharedState, pages::BadActionReq, rejection::HttpReject};
 
@@ -20,8 +20,13 @@ struct FormElement {
     data: Vec<u8>,
     mime: String
 }
+impl FormElement {
+    pub fn as_str_or_reject(self: &Self) -> Result<String, Rejection> {
+        Ok(String::from_utf8(self.data.clone()).map_err(|err| warp::reject::custom(HttpReject::FromUtf8Error(err)))?)
+    }
+}
 
-pub async fn upload(form: FormData, _state: SharedState) -> Result<Box<dyn Reply>, Rejection> {
+pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>, Rejection> {
 
     let params: HashMap<String, FormElement> = form.and_then(|mut field| async move {
         let mut bytes: Vec<u8> = vec![];
@@ -60,24 +65,37 @@ pub async fn upload(form: FormData, _state: SharedState) -> Result<Box<dyn Reply
     let delmode = params.get("delmode").unwrap();
     let named = params.get("named");
     let filename = params.get("filename").unwrap();
+    let mut is_named = named.is_none();
+    
+    if named.is_some() {
+        is_named = named.unwrap().as_str_or_reject()? == "on";
+    }
 
     let file = File::create(
         data.data.clone(),
         data.mime.clone(),
         match named {
             Some(named) => {
-                if String::from_utf8(named.data.clone())
-                    .map_err(|err| warp::reject::custom(HttpReject::FromUtf8Error(err)))?
+                if named.as_str_or_reject()?
                     .to_string() == "on" {
-                    Some(String::from_utf8(filename.data.clone()).map_err(|err| warp::reject::custom(HttpReject::FromUtf8Error(err)))?)
+                    Some(filename.as_str_or_reject()?)
                 } else {
                     None
                 }
             },
             None => None
         },
-        _state.env.clone()
-    ).await;
+        state.env.clone()
+    ).await
+     .map_err(|err| warp::reject::custom(HttpReject::StringError(err.to_string())))?;
+
+    state.file_mgr.save(&file, {
+        if is_named {
+            LookupKind::ByName
+        } else {
+            LookupKind::ByHash
+        }
+    }).map_err(|err| warp::reject::custom(HttpReject::StringError(err.to_string())))?;
 
     Ok(Box::new(warp::reply::json(&params)))
 }

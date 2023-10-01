@@ -8,6 +8,7 @@ services:
             bfile:
         volumes:
             - './filed:/opt/code'
+            - './volatile/files:/opt/user_uploads'
     caddy:
         image: caddy:alpine
         volumes:

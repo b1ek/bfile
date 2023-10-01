@@ -6,7 +6,7 @@ use std::env::current_dir;
 
 use warp::{Filter, reply::Reply, reject::Rejection};
 
-use crate::env::Env;
+use crate::{env::Env, files::lookup::FileManager};
 
 mod pages;
 mod forms;
@@ -31,9 +31,11 @@ pub async fn serve(env: Env) {
 
     log::info!("Listening on {}", env.listen.to_string());
 
+    let redis_cli = crate::db::redis_conn(env.clone()).unwrap();
     let state = SharedState {
-        redis_cli: crate::db::redis_conn(env.clone()).unwrap(),
-        env: env.clone()
+        redis_cli: redis_cli.clone(),
+        env: env.clone(),
+        file_mgr: FileManager::new(redis_cli, env.clone())
     };
 
     warp::serve(routes(state)).run(env.listen).await;

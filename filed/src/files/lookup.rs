@@ -7,7 +7,8 @@ use crate::env::Env;
 
 use super::File;
 
-pub struct FileFinder {
+#[derive(Debug, Clone)]
+pub struct FileManager {
     conn: Client,
     env: Env
 }
@@ -17,9 +18,9 @@ pub enum LookupKind {
     ByHash
 }
 
-impl FileFinder {
-    pub fn new(conn: Client, env: Env) -> FileFinder {
-        FileFinder { conn, env }
+impl FileManager {
+    pub fn new(conn: Client, env: Env) -> FileManager {
+        FileManager { conn, env }
     }
     fn find(self: &Self, key: String) -> Result<Option<File>, Box<dyn Error>> {
         let mut conn = self.conn.get_connection()?;

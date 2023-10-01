@@ -3,7 +3,7 @@
  This file provides the `loadenv` function that will do just that.
  */
 
-use std::{env::var, net::SocketAddr, path::Path};
+use std::{env::var, net::SocketAddr, path::Path, fs};
 
 #[derive(Debug, Clone)]
 pub struct Redis {
@@ -45,7 +45,10 @@ pub fn loadenv() -> Result<Env, Box<dyn std::error::Error>> {
                 let spath: String = get_var("USERCONTENT_DIR")?;
                 let path = Path::new(&spath);
                 if ! path.exists() {
-                    return Err(format!("USERCONTENT_DIR is set to \"{}\", which does not exist!", &spath).into())
+                    fs::create_dir_all(path)?;
+                }
+                if ! path.is_dir() {
+                    return Err(format!("USERCONTENT_DIR is set to \"{}\", which exists but is not a directory!", &spath).into())
                 }
                 spath
             }

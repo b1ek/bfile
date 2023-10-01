@@ -32,7 +32,8 @@ pub async fn serve(env: Env) {
     log::info!("Listening on {}", env.listen.to_string());
 
     let state = SharedState {
-        redis_cli: crate::db::redis_conn(env.clone()).unwrap()
+        redis_cli: crate::db::redis_conn(env.clone()).unwrap(),
+        env: env.clone()
     };
 
     warp::serve(routes(state)).run(env.listen).await;

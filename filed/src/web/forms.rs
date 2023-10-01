@@ -52,7 +52,9 @@ pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>
         return Ok(Box::new(
             warp::reply::with_status(
                 warp::reply::html(
-                    BadActionReq {}
+                    BadActionReq {
+                        env: state.env.clone()
+                    }
                         .render()
                         .map_err(|err| warp::reject::custom(HttpReject::AskamaError(err.into())))?
                 ),

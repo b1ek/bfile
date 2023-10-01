@@ -14,13 +14,13 @@ use super::{state::SharedState, rejection::HttpReject};
 #[derive(Template)]
 #[template( path = "index.html" )]
 pub struct Index {
-    env: Env
+    pub env: Env
 }
 
 #[derive(Template)]
 #[template( path = "bad_action_req.html" )]
 pub struct BadActionReq {
-    env: Env
+    pub env: Env
 }
 
 #[derive(Template)]
@@ -28,7 +28,7 @@ pub struct BadActionReq {
 #[allow(dead_code)]
 pub struct Uploaded {
     file: String,
-    env: Env
+    pub env: Env
 }
 
 

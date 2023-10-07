@@ -1,0 +1,89 @@
+openapi: 3.0.3
+info:
+  title: blek! File (fileD) File API
+  description: |-
+    This document describes the API of the File API of blek! File fileD.
+
+    This API has optional api key authorization, which should be located in the env file.
+  version: 0.0.1
+servers:
+  - url: http://localhost
+    description: Local staging environment
+paths:
+  /api/get_all:
+    get:
+      summary: Get all files
+      description: |-
+        Get all files available.
+
+        Returns an array of strings with no metadata.
+      security:
+        - apikey: [ key ]
+      responses:
+        200:
+          description: An array of file IDs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example: [ 'ZnVjayBwdXRpbg' ]
+  /api/delete:
+    post:
+      summary: Delete a file
+      description: |-
+        Deletes a file thats been uploaded.
+
+        It will work if one of the two conditions are met:  
+        1. The requester's IP is the same as the uploader IP
+        2. The request is authorized with an API key
+      security:
+        - apikey: [ key ]
+      responses:
+        200:
+          description: |-
+            The file has been deleted
+
+            Returns an empty object for future extension
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {}
+
+components:
+
+  schemas:
+    File:
+      type: object
+      properties:
+        path:
+          type: string
+          description: Path to the file in fileD's filesystem
+          example: 1
+        size:
+          type: integer
+          description: Size of the file in bytes
+          example: 10
+        name:
+          type: string
+          description: (optional) Name of the file
+          example: null
+        mime:
+          type: string
+          description: MIME type of the file
+          example: text/plain
+        delete_at:
+          type: string
+          description: TimeDate when the file will be deleted
+          example: '1984-01-01T00:00:00.000Z'
+        sha512:
+          type: string
+          example: 417e1ec1a0e82aac809da7e5aa309e03bf47eaa96ab2e335f5bb739d062d835b04ccebb89214bd5a54879527789a81ae4e9deab813e4212c757b36d08fa8165a
+
+  securitySchemes:
+    apikey:
+      type: http
+      scheme: bearer
+      description: Optional authorization, as defined in the instance-specific config file

@@ -19,7 +19,8 @@ pub struct Env {
     pub listen: SocketAddr,
     pub redis: Redis,
     pub filedir: String,
-    pub instanceurl: String
+    pub instanceurl: String,
+    pub uploadspath: String
 }
 
 fn get_var<T: Into<String>, O: From<String>>(name: T) -> Result<O, String> {
@@ -53,7 +54,8 @@ pub fn loadenv() -> Result<Env, Box<dyn std::error::Error>> {
                 }
                 spath
             },
-            instanceurl: get_var("INSTANCE_URL")?
+            instanceurl: get_var("INSTANCE_URL")?,
+            uploadspath: get_var("UPLOADS_PATH")?
         }
     )
 }

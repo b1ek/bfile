@@ -2,9 +2,9 @@
  pages.rs - All the HTML pages
 */
 
-use std::{collections::HashMap, convert::Infallible};
+use std::collections::HashMap;
 
-use warp::{reply::{Reply, Html}, Filter, reject::{Rejection, Reject}};
+use warp::{reply::{Reply, Html}, Filter, reject::Rejection};
 use askama::Template;
 
 use crate::env::Env;

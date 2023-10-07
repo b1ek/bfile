@@ -12,6 +12,7 @@ mod pages;
 mod forms;
 mod state;
 mod rejection;
+mod api;
 
 use state::SharedState;
 
@@ -20,7 +21,8 @@ pub fn routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error = R
     let staticpath = staticpath.to_str().unwrap().to_string() + "/static";
 
     pages::get_routes(state.clone())
-        .or(forms::get_routes(state))
+        .or(forms::get_routes(state.clone()))
+        .or(api::get_routes(state))
         .or(warp::fs::dir(staticpath.to_string()))
 }
 

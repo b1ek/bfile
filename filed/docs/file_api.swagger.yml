@@ -64,6 +64,38 @@ paths:
               schema:
                 type: object
                 example: {}
+  /api/files/upload:
+    post:
+      summary: Upload a file
+      description: |-
+        A programmatic way to upload a file.  
+
+        The request must be encoded in `multipart/form-data` to ensure that the binary file is transferred properly.
+      tags:
+        - File API
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  example: binary file data
+                  description: binary file data
+                metadata:
+                  type: object
+                  description: file info
+                  properties:
+                    sha512:
+                      type: string
+                      description: SHA512 hash of the file to ensure integrity
+                    name:
+                      type: string
+                      description: Optional name of the file so it would be accessible like file.blek.codes/uploads/{name}
+      responses:
+        200:
+          description: File uploaded successfully
 
 components:
 

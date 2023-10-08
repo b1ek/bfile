@@ -9,27 +9,38 @@ info:
 servers:
   - url: http://localhost
     description: Local staging environment
+tags:
+  - name: File API
+    description: API for interacting with files
 paths:
-  /api/get_all:
+  /api/files/get_all:
     get:
       summary: Get all files
       description: |-
         Get all files available.
 
-        Returns an array of strings with no metadata.
+        Returns an array of file objects with all data
+      tags:
+        - File API
       security:
         - apikey: [ key ]
       responses:
         200:
-          description: An array of file IDs
+          description: An array of file objects
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: string
-                example: [ 'ZnVjayBwdXRpbg' ]
-  /api/delete:
+                  $ref: '#/components/schemas/File'
+                example:
+                  - path: /opt/useruploads/417e1ec1a0e82aac809da7e5aa309e03bf47eaa96ab2e335f5bb739d062d835b04ccebb89214bd5a54879527789a81ae4e9deab813e4212c757b36d08fa8165a
+                    size: 10
+                    name: null
+                    mime: text/plain
+                    delete_at: '1984-01-01T00:00:00.000Z'
+                    sha512: 417e1ec1a0e82aac809da7e5aa309e03bf47eaa96ab2e335f5bb739d062d835b04ccebb89214bd5a54879527789a81ae4e9deab813e4212c757b36d08fa8165a
+  /api/files/delete:
     post:
       summary: Delete a file
       description: |-
@@ -38,6 +49,8 @@ paths:
         It will work if one of the two conditions are met:  
         1. The requester's IP is the same as the uploader IP
         2. The request is authorized with an API key
+      tags:
+        - File API
       security:
         - apikey: [ key ]
       responses:

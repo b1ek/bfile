@@ -40,6 +40,14 @@ paths:
                     mime: text/plain
                     delete_at: '1984-01-01T00:00:00.000Z'
                     sha512: 417e1ec1a0e82aac809da7e5aa309e03bf47eaa96ab2e335f5bb739d062d835b04ccebb89214bd5a54879527789a81ae4e9deab813e4212c757b36d08fa8165a
+        401:
+          description: |-
+            This error code is returned if one of the two conditions are met:
+
+            1. The instance does not allow getting information about all files.
+            2. The instance requires API key for all API manipulations.
+            3. The provided API key is invalid.
+            4. API authorization is not enabled, but a key is provided
   /api/files/delete:
     post:
       summary: Delete a file
@@ -64,6 +72,24 @@ paths:
               schema:
                 type: object
                 example: {}
+        401:
+          description: |-
+            This error code is returned if one of the two conditions are met:
+
+            1. The instance does not allow deleting files via API.
+            2. The file has been uploaded from another IP, which is not this one, and the API was not authorized via an API key.
+            3. The instance requires API key for all API manipulations.
+            4. The provided API key is invalid.
+            5. API authorization is not enabled, but a key is provided
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fid:
+                  type: string
+                  example: ID or name of the file. It is the NAME in file.blek.codes/uploads/NAME
   /api/files/upload:
     post:
       summary: Upload a file
@@ -73,6 +99,8 @@ paths:
         The request must be encoded in `multipart/form-data` to ensure that the binary file is transferred properly.
       tags:
         - File API
+      security:
+        - apikey: [ key ]
       requestBody:
         content:
           multipart/form-data:
@@ -96,6 +124,14 @@ paths:
       responses:
         200:
           description: File uploaded successfully
+        401:
+          description: |-
+            This error code is returned if one of the two conditions are met:
+
+            1. The instance does not allow API file uploads.
+            2. The instance requires API key for all API manipulations.
+            3. The provided API key is invalid.
+            4. API authorization is not enabled, but a key is provided
 
 components:
 

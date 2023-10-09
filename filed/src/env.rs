@@ -70,4 +70,8 @@ impl Env {
     pub fn usercontent_dir(self: &Self) -> Box<&Path> {
         Box::new(Path::new(&self.filedir))
     }
+    pub fn shortcommit(self: &Self) -> String {
+        let commit = self.last_commit.to_string().clone();
+        commit.chars().take(6).collect()
+    }
 }

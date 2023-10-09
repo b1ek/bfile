@@ -8,6 +8,7 @@ services:
             bfile:
         volumes:
             - './filed:/opt/code'
+            - './.git:/opt/code/.git:ro' # for fetching the latest commit version
             - '/opt/code/target'
             - './volatile/files:/opt/user_uploads'
     caddy:

@@ -4,6 +4,8 @@ FROM rust as builder
 WORKDIR /opt/code
 COPY . .
 
+RUN apt install -y git
+
 # No build is done during this step
 # since the directory will be mounted anyways
 # to the dev's machine.

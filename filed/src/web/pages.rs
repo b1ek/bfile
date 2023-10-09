@@ -31,6 +31,13 @@ pub struct Uploaded {
     pub env: Env
 }
 
+#[derive(Template)]
+#[template( path = "passworded-files.html" )]
+#[allow(dead_code)]
+pub struct PasswordedFilesHelpPage {
+    pub env: Env
+}
+
 
 pub async fn uploaded(query: HashMap<String, String>, state: SharedState) -> Result<Html<String>, Rejection> {
 
@@ -67,7 +74,22 @@ pub fn index_f(state: SharedState) -> impl Filter<Extract = impl Reply, Error = 
         .and_then(index)
 }
 
+pub async fn passworded(state: SharedState) -> Result<Html<String>, Rejection> {
+    let rendered = PasswordedFilesHelpPage {
+        env: state.env.clone()
+    };
+    Ok(warp::reply::html(rendered.render().map_err(|err| warp::reject::custom(HttpReject::AskamaError(err)))?))
+}
+
+pub fn passworded_f(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
+    warp::path!("password-files")
+        .and(warp::path::end())
+        .map(move || state.clone())
+        .and_then(passworded)
+}
+
 pub fn get_routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
     index_f(state.clone())
         .or(uploaded_f(state.clone()))
+        .or(passworded_f(state))
 }

@@ -42,15 +42,30 @@
                             <input style="max-width:100px" id='bfile-formupload-file-name' type="text" name="filename" placeholder="file.txt"></input>
                         </span>
                     </p>
-                    <p>
-                        <label>
-                            <input type="checkbox" name="passworded">
-                        </label>
-                        <label>
-                            I want to add a password to the file:
-                            <input type="password" name="password" style="max-width:90px">
-                        </label>
-                    </p>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label>
+                                        <input type="checkbox" name="passworded">
+                                        I want to add a password to the file:
+                                    
+                                        <span style="font-size:80%;display:block;padding:2px 0 0 24px">
+                                            Warning: the file WILL NOT be encrypted.<br/>
+                                            <a href="/passworded-files">
+                                                Learn more
+                                            </a>
+                                        </span>
+                                    </label>
+                                </td>
+                                <td style="padding-left:4px">
+                                    <label>
+                                        <input type="password" name="password" style="max-width:90px">
+                                    </label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <p>
                         <input type="file" name="file" id="bfile-formupload-file" style="display: none" />
                         <label for="bfile-formupload-file">

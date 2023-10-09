@@ -4,6 +4,7 @@
 
 use std::env::current_dir;
 
+use static_dir::static_dir;
 use warp::{Filter, reply::Reply, reject::Rejection};
 
 use crate::{env::Env, files::lookup::FileManager};
@@ -23,6 +24,7 @@ pub fn routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error = R
     pages::get_routes(state.clone())
         .or(forms::get_routes(state.clone()))
         .or(api::get_routes(state))
+        .or(static_dir!("static"))
         .or(warp::fs::dir(staticpath.to_string()))
 }
 

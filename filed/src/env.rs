@@ -5,6 +5,10 @@
 
 use std::{env::var, net::SocketAddr, path::Path, fs};
 
+use compile_time_run::run_command_str;
+
+const LAST_COMMIT: &'static str = run_command_str!("git", "--no-pager", "log", "--pretty=format:%H", "-1");
+
 #[derive(Debug, Clone)]
 pub struct Redis {
     pub pass: String,
@@ -20,7 +24,8 @@ pub struct Env {
     pub redis: Redis,
     pub filedir: String,
     pub instanceurl: String,
-    pub uploadspath: String
+    pub uploadspath: String,
+    pub last_commit: &'static str
 }
 
 fn get_var<T: Into<String>, O: From<String>>(name: T) -> Result<O, String> {
@@ -55,7 +60,8 @@ pub fn loadenv() -> Result<Env, Box<dyn std::error::Error>> {
                 spath
             },
             instanceurl: get_var("INSTANCE_URL")?,
-            uploadspath: get_var("UPLOADS_PATH")?
+            uploadspath: get_var("UPLOADS_PATH")?,
+            last_commit: LAST_COMMIT
         }
     )
 }

@@ -4,10 +4,13 @@ FROM rust:alpine as builder
 WORKDIR /opt/build
 COPY . .
 
+RUN apk add --no-cache musl-dev upx
+
 RUN cargo b -r
+RUN strip target/release/filed && upx --best target/release/filed
 
 # --- deploy ---
-FROM alpine
+FROM busybox:musl
 
 COPY --from=builder /opt/build/target/release/filed /bin/filed
 CMD [ "/bin/filed" ]

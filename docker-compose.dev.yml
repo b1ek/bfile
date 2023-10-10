@@ -25,6 +25,10 @@ services:
         command: [ 'redis-server', '--requirepass', '$REDIS_PASS' ]
         ports:
             - 6379:6379
-        
+    qr:
+        image: blekii/miniqr
+        networks:
+            bfile:
+
 networks:
     bfile:

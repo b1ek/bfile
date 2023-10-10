@@ -38,6 +38,14 @@ pub struct PasswordedFilesHelpPage {
     pub env: Env
 }
 
+#[derive(Template)]
+#[template( path = "upload_success.html" )]
+#[allow(dead_code)]
+pub struct UploadSuccessPage {
+    pub env: Env,
+    pub link: String
+}
+
 
 pub async fn uploaded(query: HashMap<String, String>, state: SharedState) -> Result<Html<String>, Rejection> {
 

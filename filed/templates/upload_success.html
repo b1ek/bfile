@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+<link rel="stylesheet" href="/mobile-hide.css"></link>
+<style>
+    .qr-code {
+        display: block;
+        min-height: min(160px, 35vw);
+        width: min(160px, 35vw);
+        object-fit: contain;
+        image-rendering: pixelated;
+        padding: min(40px, 8vw);
+        background: white;
+        margin: min(40px, 8vw) auto;
+        border-radius: 12px;
+    }
+    .btn-fill {
+        width: calc(100% - var(--margin-x));
+    }
+</style>
+
+{% endblock %}
+
+{% block body %}
+
+<div style="max-width:75vw;width:fit-content;margin:0 auto;text-align:center">
+    <h1 style="text-align:center;margin-bottom:0">File uploaded successfully!</h1>
+    <p style="margin-top:4px;font-size:90%">
+        It is available via the following link:
+        <a href='{{ link }}'>
+            {{ link }}
+        </a>
+    </p>
+    <div style="width:100%">
+        <img src="{{ env.instanceurl }}/qr/{{ urlencoding::encode(link) }}" class="qr-code">
+    </div>
+    <a href="/" role="button" class="btn btn-fill" style="display:block" >
+        Upload another file
+    </a>
+    <br/>
+    <div class="js-only btn btn-fill" style="cursor:pointer" id="btn-upload-done" data-clipboard-text="{{ env.instanceurl }}/qr/{{ urlencoding::encode(link) }}">
+        Copy link
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>document.getElementById('btn-upload-done').style.display = 'block'</script>
+<script src="https://unpkg.com/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+    new ClipboardJS('#btn-upload-done');
+    (()=>{
+        let e = document.getElementById('btn-upload-done');
+        let animating = false;
+        e.onclick = () => {
+            if (animating) return
+            let old = e.innerText;
+            e.innerText = 'Copied!'
+            animating = true;
+            setTimeout(() => {
+                e.innerText = old;
+                animating = false
+            }, 1500);
+        }
+    })()
+</script>
+
+{% endblock %}

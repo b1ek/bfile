@@ -13,7 +13,7 @@ use serde::Serialize;
 
 use crate::files::{File, lookup::LookupKind};
 
-use super::{state::SharedState, pages::BadActionReq, rejection::HttpReject};
+use super::{state::SharedState, pages::{BadActionReq, UploadSuccessPage}, rejection::HttpReject};
 
 #[derive(Debug, Serialize)]
 struct FormElement {
@@ -99,7 +99,13 @@ pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>
         }
     }).map_err(|err| warp::reject::custom(HttpReject::StringError(err.to_string())))?;
 
-    Ok(Box::new(warp::reply::json(&params)))
+    let uploaded = UploadSuccessPage {
+        env: state.env.clone(),
+        link: "uwu".into()
+    };
+
+    Ok(Box::new(warp::reply::html(uploaded.render().unwrap())))
+
 }
 
 pub fn get_routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {

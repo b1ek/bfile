@@ -1,3 +1,7 @@
 :80 {
     reverse_proxy http://filed
+    handle /qr/* {
+        uri * strip_prefix /qr
+        reverse_proxy http://qr
+    }
 }

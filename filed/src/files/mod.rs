@@ -46,8 +46,6 @@ impl File {
         let path = env.usercontent_dir().join(&filename);
         if ! path.exists() {
             fs::write(&path, &data).await;
-        } else {
-            return Err("File already uploaded".into());
         }
 
         let expires = Local::now();

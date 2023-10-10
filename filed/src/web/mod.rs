@@ -14,6 +14,7 @@ mod forms;
 mod state;
 mod rejection;
 mod api;
+mod uploaded;
 
 use state::SharedState;
 
@@ -23,7 +24,8 @@ pub fn routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error = R
 
     pages::get_routes(state.clone())
         .or(forms::get_routes(state.clone()))
-        .or(api::get_routes(state))
+        .or(api::get_routes(state.clone()))
+        .or(uploaded::get_uploaded(state))
         .or(static_dir!("static"))
         .or(warp::fs::dir(staticpath.to_string()))
 }

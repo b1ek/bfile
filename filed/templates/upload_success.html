@@ -28,8 +28,9 @@
     <h1 style="text-align:center;margin-bottom:0">File uploaded successfully!</h1>
     <p style="margin-top:4px;font-size:90%">
         It is available via the following link:
-        <a href='{{ link }}'>
-            {{ link }}
+        <br/>
+        <a href='{{ env.instanceurl }}/upload/{{ urlencoding::encode(link) }}'>
+            {{ env.instanceurl }}/upload/{{ urlencoding::encode(link) }}
         </a>
     </p>
     <div style="width:100%">
@@ -39,7 +40,7 @@
         Upload another file
     </a>
     <br/>
-    <div class="js-only btn btn-fill" style="cursor:pointer" id="btn-upload-done" data-clipboard-text="{{ env.instanceurl }}/qr/{{ urlencoding::encode(link) }}">
+    <div class="js-only btn btn-fill" style="cursor:pointer" id="btn-upload-done" data-clipboard-text="{{ env.instanceurl }}/upload/{{ urlencoding::encode(link) }}">
         Copy link
     </div>
 </div>

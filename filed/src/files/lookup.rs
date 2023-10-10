@@ -40,6 +40,7 @@ impl FileManager {
     }
 
     fn save_int(self: &Self, file: &File, key: String) -> Result<(), Box<dyn Error>> {
+        log::debug!("Saving a file with key: {key}");
         let mut conn = self.conn.get_connection()?;
         conn.set(key, serde_json::to_string(&file)?)?;
         Ok(())

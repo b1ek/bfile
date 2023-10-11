@@ -101,7 +101,7 @@ pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>
 
     let uploaded = UploadSuccessPage {
         env: state.env.clone(),
-        link: "uwu".into()
+        link: file.leftmost_link()
     };
 
     Ok(Box::new(warp::reply::html(uploaded.render().unwrap())))

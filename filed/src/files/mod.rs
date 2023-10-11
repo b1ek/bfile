@@ -29,6 +29,13 @@ impl File {
     pub fn hash(self: &Self) -> String {
         self.sha512.clone()
     }
+    pub fn leftmost_link(self: &Self) -> String {
+        if self.name.is_none() {
+            self.hash()
+        } else {
+            self.name.clone().unwrap()
+        }
+    }
 
     pub async fn read(self: &Self) -> Result<Vec<u8>, Box<dyn Error>> {
         let data = self.read_unchecked().await?;

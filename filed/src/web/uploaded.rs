@@ -9,7 +9,7 @@ pub async fn uploaded((file, _state): (String, SharedState)) -> Result<Box<dyn R
     
     if file_res.is_none() {
         file_res = _state.file_mgr.find_by_name(file.clone())
-        .map_err(|x| warp::reject::custom(HttpReject::StringError(x.to_string())))?;
+            .map_err(|x| warp::reject::custom(HttpReject::StringError(x.to_string())))?;
     }
 
     if file_res.is_none() {

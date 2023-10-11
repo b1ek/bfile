@@ -33,6 +33,7 @@ impl FileManager {
         Ok(Some(serde_json::from_str(data.as_str())?))
     }
     pub fn find_by_name(self: &Self, name: String) -> Result<Option<File>, Box<dyn Error>> {
+        println!("{}-name-{}", self.env.redis.prefix, name);
         Ok(self.find(format!("{}-name-{}", self.env.redis.prefix, name))?)
     }
     pub fn find_by_hash(self: &Self, hash: String) -> Result<Option<File>, Box<dyn Error>> {

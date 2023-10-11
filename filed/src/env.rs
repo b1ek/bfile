@@ -5,8 +5,6 @@
 
 use std::{env::var, net::SocketAddr, path::Path, fs};
 
-use compile_time_run::run_command_str;
-
 #[derive(Debug, Clone)]
 pub struct Redis {
     pub pass: String,

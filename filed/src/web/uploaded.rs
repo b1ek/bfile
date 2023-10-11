@@ -1,4 +1,4 @@
-use warp::{Filter, reply::{Reply, html}, reject::Rejection};
+use warp::{Filter, reply::Reply, reject::Rejection};
 
 use super::{state::SharedState, rejection::HttpReject};
 

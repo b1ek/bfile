@@ -2,13 +2,22 @@ version: '3.7'
 services:
     filed:
         build:
-            context: filed
-            dockerfile: Dockerfile.dev
+            context: containers
+            dockerfile: rust-dev.Dockerfile
         networks:
             bfile:
         volumes:
             - './filed:/opt/code'
             - '/opt/code/target'
+            - './volatile/files:/opt/user_uploads'
+    janitord:
+        build:
+            context: containers
+            dockerfile: rust-dev.Dockerfile
+        networks:
+            bfile:
+        volumes:
+            - './janitor:/opt/code'
             - './volatile/files:/opt/user_uploads'
     caddy:
         image: caddy:alpine

@@ -1,5 +1,5 @@
 
-use std::{error::Error, env::var, time::Duration};
+use std::{error::Error, env::var, time::Duration, path::Path};
 
 #[derive(Debug, Clone)]
 pub struct RedisEnv {
@@ -13,7 +13,8 @@ pub struct RedisEnv {
 pub struct Env {
     pub redis: RedisEnv,
     pub clean_del: Duration,
-    pub clean_errdel: Duration
+    pub clean_errdel: Duration,
+    pub usercont_dir: String
 }
 
 impl Env {
@@ -24,10 +25,18 @@ impl Env {
                     pass: var("REDIS_PASS")?.to_string(),
                     host: var("REDIS_HOST")?.to_string(),
                     port: var("REDIS_PORT")?.parse()?,
-                    prefix: var("REDIS_PASS")?.to_string()
+                    prefix: var("REDIS_PREFIX")?.to_string()
                 },
                 clean_del: parse_duration::parse(var("CLEAN_DEL")?.as_str())?,
-                clean_errdel: parse_duration::parse(var("CLEAN_ERRDEL")?.as_str())?
+                clean_errdel: parse_duration::parse(var("CLEAN_ERRDEL")?.as_str())?,
+                usercont_dir: {
+                    let dir = var("USERCONTENT_DIR")?;
+                    let dir = dir.as_str();
+                    if ! Path::new(dir).is_dir() {
+                        return Err("Path specified in USERCONTENT_DIR is not a directory!".into());
+                    }
+                    dir.to_string()
+                }
             }
         )
     }

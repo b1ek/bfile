@@ -3,11 +3,12 @@
 use std::{sync::Arc, error::Error, ops::Add};
 
 use chrono::{DateTime, Local};
+use redis::AsyncCommands;
 use sha2::{Sha512, Digest, digest::FixedOutput};
 use serde::{Serialize, Deserialize};
-use tokio::fs;
+use tokio::{fs, join};
 
-use crate::env::Env;
+use crate::{env::Env, web::state::SharedState};
 
 pub mod lookup;
 
@@ -31,6 +32,30 @@ pub enum DeleteMode {
 impl File {
     pub fn expired(self: &Self) -> bool {
         self.delete_at < chrono::Local::now()
+    }
+
+    pub fn get_redis_key(self: &Self, prefix: String) -> String {
+        format!(
+            "{}{}{}",
+            prefix,
+            match self.name {
+                Some(_) => "-name-",
+                None => "-hash-"
+            },
+            self.clone().name.unwrap_or(self.hash())
+        )
+    }
+
+    pub async fn delete(self: &Self, state: SharedState) -> Result<(), Box<dyn Error>> {
+        let mut redis = state.redis_cli.get_tokio_connection().await?;    
+        let (r1, r2) = join!(
+            tokio::fs::remove_file(self.path.clone()),
+            redis.del::<String, String>(self.get_redis_key(state.env.redis.prefix))
+        );
+        
+        r1?; r2?;
+        
+        Ok(())
     }
 
     pub fn comp_hash(self: &Self, other: &Sha512) -> bool {

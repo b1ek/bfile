@@ -1,14 +1,16 @@
 use warp::{Filter, reply::Reply, reject::Rejection};
 
+use crate::files::DeleteMode;
+
 use super::{state::SharedState, rejection::HttpReject};
 
-pub async fn uploaded((file, _state): (String, SharedState)) -> Result<Box<dyn Reply>, Rejection> {
+pub async fn uploaded((file, state): (String, SharedState)) -> Result<Box<dyn Reply>, Rejection> {
 
-    let mut file_res = _state.file_mgr.find_by_hash(file.clone())
+    let mut file_res = state.file_mgr.find_by_hash(file.clone())
         .map_err(|x| warp::reject::custom(HttpReject::StringError(x.to_string())))?;
     
     if file_res.is_none() {
-        file_res = _state.file_mgr.find_by_name(file.clone())
+        file_res = state.file_mgr.find_by_name(file.clone())
             .map_err(|x| warp::reject::custom(HttpReject::StringError(x.to_string())))?;
     }
 
@@ -18,11 +20,23 @@ pub async fn uploaded((file, _state): (String, SharedState)) -> Result<Box<dyn R
         )
     }
     let file_res = file_res.unwrap();
+    let data = file_res.read_unchecked().await.unwrap();
+    
+    match file_res.delete_mode {
+        DeleteMode::Time => {
+            if file_res.expired() {
+                let _ = file_res.delete(state.clone()).await;
+            }
+        },
+        DeleteMode::TimeOrDownload => {
+            let _ = file_res.delete(state.clone()).await;
+        }
+    }
 
     Ok(
         Box::new(
             warp::reply::with_header(
-                file_res.read_unchecked().await.unwrap(),
+                data,
                 "Content-Type", file_res.mime
             )
         )

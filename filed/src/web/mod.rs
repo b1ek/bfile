@@ -11,7 +11,7 @@ use crate::{env::Env, files::lookup::FileManager};
 
 mod pages;
 mod forms;
-mod state;
+pub mod state;
 mod rejection;
 mod api;
 mod uploaded;

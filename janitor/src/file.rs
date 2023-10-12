@@ -14,6 +14,6 @@ pub struct File {
 
 impl File {
     pub fn expired(self: &Self) -> bool {
-        self.delete_at > chrono::Local::now()
+        self.delete_at < chrono::Local::now()
     }
 }

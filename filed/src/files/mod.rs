@@ -18,10 +18,21 @@ pub struct File {
     pub name: Option<String>,
     pub mime: String,
     pub delete_at: DateTime<Local>,
+    pub delete_mode: DeleteMode,
     sha512: String
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum DeleteMode {
+    Time,
+    TimeOrDownload
+}
+
 impl File {
+    pub fn expired(self: &Self) -> bool {
+        self.delete_at < chrono::Local::now()
+    }
+
     pub fn comp_hash(self: &Self, other: &Sha512) -> bool {
         let mut hash = other.clone();
         hex::encode(hash.finalize_fixed()) == self.sha512
@@ -63,7 +74,7 @@ impl File {
         Ok(ndata)
     }
 
-    pub async fn create(data: Vec<u8>, mime: String, name: Option<String>, env: Env) -> Result<File, Box<dyn Error>> {
+    pub async fn create(data: Vec<u8>, mime: String, name: Option<String>, env: Env, delete_mode: DeleteMode) -> Result<File, Box<dyn Error>> {
 
         let mut filename = String::new();
         let mut hash = Sha512::new();
@@ -90,6 +101,7 @@ impl File {
                 name: Some(filename),
                 mime,
                 delete_at: expires,
+                delete_mode,
                 sha512: hash
             }
         )

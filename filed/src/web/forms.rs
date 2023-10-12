@@ -11,7 +11,7 @@ use futures_util::TryStreamExt;
 use bytes::BufMut;
 use serde::Serialize;
 
-use crate::files::{File, lookup::LookupKind};
+use crate::files::{File, lookup::LookupKind, DeleteMode};
 
 use super::{state::SharedState, pages::{BadActionReq, UploadSuccessPage}, rejection::HttpReject};
 
@@ -64,10 +64,15 @@ pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>
     }
 
     let data = params.get("file").unwrap();
-    let _delmode = params.get("delmode").unwrap();
+    let delmode = params.get("delmode").unwrap();
     let named = params.get("named");
     let filename = params.get("filename").unwrap();
     let mut is_named = named.is_none();
+
+    let delmode = delmode.as_str_or_reject()?;
+    if delmode != "30" && delmode != "dl" {
+        return Err(warp::reject::custom(HttpReject::StringError("delmode is neither 30 or dl!".into())));
+    }
     
     if named.is_some() {
         is_named = named.unwrap().as_str_or_reject()? == "on";
@@ -87,7 +92,14 @@ pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>
             },
             None => None
         },
-        state.env.clone()
+        state.env.clone(),
+        {
+            if delmode == "30" {
+                DeleteMode::Time
+            } else {
+                DeleteMode::TimeOrDownload
+            }
+        }
     ).await
      .map_err(|err| warp::reject::custom(HttpReject::StringError(err.to_string())))?;
 

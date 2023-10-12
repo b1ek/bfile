@@ -36,13 +36,15 @@ async fn main() {
         if res.is_err() {
             log::error!("Error while cleaning: {}", res.unwrap_err());
             log::error!("Retrying in {}", std::env::var("CLEAN_ERRDEL").unwrap());
+            log::debug!("Next clean will run at {}", chrono::Local::now() + env.clean_errdel);
             tokio::time::sleep(envy.clean_errdel).await;
             continue;
         }
     
         #[cfg(debug_assertions)] {
             log::debug!("Cleaned successfully");
-            log::debug!("Next clean is scheduled in {}", std::env::var("CLEAN_DEL").unwrap())
+            log::debug!("Next clean is scheduled in {}", std::env::var("CLEAN_DEL").unwrap());
+            log::debug!("Next clean will run at {}", chrono::Local::now() + env.clean_del);
         }
 
         tokio::time::sleep(envy.clean_errdel).await;

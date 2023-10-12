@@ -13,6 +13,14 @@ async fn check_key(key: String, mut client: redis::Client) -> bool {
     let val: String = client.get(key.clone()).unwrap();
     let file: File = serde_json::from_str(val.as_str()).unwrap();
 
+    if file.expired() {
+        #[cfg(debug_assertions)] {
+            log::debug!("Object {key} is marked for deletion because it has expired");
+        }
+        client.del::<String, ()>(key).unwrap();
+        return true;
+    }
+
     if ! Path::new(&file.path.clone()).exists() {
         #[cfg(debug_assertions)] {
             log::debug!("Object {key} is marked for deletion because it doesn't exist in the filesystem");
@@ -23,6 +31,9 @@ async fn check_key(key: String, mut client: redis::Client) -> bool {
 
     let stat = tokio::fs::metadata(file.clone().path).await.unwrap();
     if ! stat.is_file() {
+        #[cfg(debug_assertions)] {
+            log::debug!("Object {key} is marked for deletion because it exists in the filesystem, but is not a file");
+        }
         client.del::<String, ()>(key).unwrap();
         return true;
     }

@@ -23,7 +23,6 @@ async fn clean(env: env::Env, state: State) -> CleanResult {
     #[cfg(debug_assertions)]
     log::debug!("Initiating clean process");
 
-    let envy = env.clone();
     let res = clean::clean(state.clone()).await;
     if res.is_err() {
         log::error!("Error while cleaning: {}", res.unwrap_err());

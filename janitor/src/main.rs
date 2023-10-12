@@ -12,11 +12,11 @@ pub fn redis_conn(env: env::Env) -> Result<redis::Client, redis::RedisError> {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 enum CleanResult {
     Skip,
-    #[allow(dead_code)]
     Break,
-    Ok
+    ScheduleNext(chrono::DateTime<chrono::Local>)
 }
 
 async fn clean(env: env::Env, state: State) -> CleanResult {
@@ -27,21 +27,13 @@ async fn clean(env: env::Env, state: State) -> CleanResult {
     let res = clean::clean(state.clone()).await;
     if res.is_err() {
         log::error!("Error while cleaning: {}", res.unwrap_err());
-        log::error!("Retrying in {}", std::env::var("CLEAN_ERRDEL").unwrap());
-        log::debug!("Next clean will run at {}", chrono::Local::now() + env.clean_errdel);
-        tokio::time::sleep(envy.clean_errdel).await;
-        return CleanResult::Skip;
+        return CleanResult::ScheduleNext(chrono::Local::now() + env.clean_errdel);
     }
 
     #[cfg(debug_assertions)] {
         log::debug!("Cleaned successfully");
-        log::debug!("Next clean is scheduled in {}", std::env::var("CLEAN_DEL").unwrap());
-        log::debug!("Next clean will run at {}", chrono::Local::now() + env.clean_del);
+        return CleanResult::ScheduleNext(chrono::Local::now() + env.clean_del);
     }
-
-    tokio::time::sleep(envy.clean_errdel).await;
-
-    CleanResult::Ok
 }
 
 #[tokio::main]
@@ -71,6 +63,12 @@ async fn main() {
         match res {
             CleanResult::Break => {
                 break
+            },
+            CleanResult::ScheduleNext(next) => {
+                #[cfg(debug_assertions)] {
+                    log::debug!("Next run is scheduled at {} ({})", next.format("%d-%m-%Y %H:%M:%S"), next.timestamp());
+                }
+                tokio::time::sleep((next - chrono::Local::now()).to_std().unwrap()).await;
             },
             _ => {}
         }

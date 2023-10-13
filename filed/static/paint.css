@@ -225,9 +225,6 @@ p {
     width: 100%;
 }
 .footer svg {
-    position: absolute;
-    bottom: -10px;
-    right: 10%;
     color: var(--header-color);
     transition: 500ms ease;
     filter: brightness(1.2);

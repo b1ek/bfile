@@ -15,7 +15,7 @@
         <script src="/delay.js"></script>
         <title>blek! File</title>
 
-        <style> .footer svg { height: 32px } </style>
+        <style> .footer svg { height: 32px; margin: 10px 0 } </style>
 
         {% include "seotags.html" %}
         {% block head %}{% endblock %}
@@ -30,29 +30,40 @@
             {% block body %}{% endblock %}
         </div>
         <div class="footer">
-            <small>Made with Rust and &lt;3</small>
 
-            <ul style='margin:10px 0'>
-                <li>
-                    <a href="https://git.blek.codes/blek/bfile">
-                        Source code
-                    </a>
-                </li>
-                <li>
-                    <a href="/license">
-                        Released under GPLv3
-                    </a>
-                </li>
-                <li>
-                    <a href="/authors">
-                        Made by blek! and contributors
-                    </a>
-                </li>
-            </ul>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <small>Made with Rust and &lt;3</small>
+                
+                            <ul style='margin:10px 0'>
+                                <li>
+                                    <a href="https://git.blek.codes/blek/bfile">
+                                        Source code
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/license">
+                                        Released under GPLv3
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/authors">
+                                        Made by blek! and contributors
+                                    </a>
+                                </li>
+                            </ul>
+                        </td>
+                        <td style="text-align:right;vertical-align:bottom">
+                            <a href="https://blek.codes">
+                                {% include "blek.svg" %}
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
-            <a href="https://blek.codes">
-                {% include "blek.svg" %}
-            </a>
         </div>
 
         <script src="/js-only.js"></script>

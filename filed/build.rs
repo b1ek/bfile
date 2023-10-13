@@ -24,6 +24,5 @@ fn main() {
             println!("{:?}", path);
             path
         }, bundled).unwrap();
-        panic!()
     })
 }

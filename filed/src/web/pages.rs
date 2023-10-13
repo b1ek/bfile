@@ -47,6 +47,20 @@ pub struct UploadSuccessPage {
 }
 
 
+#[derive(Template)]
+#[template( path = "authors.html" )]
+#[allow(dead_code)]
+pub struct AuthorsPage {
+    pub env: Env
+}
+
+#[derive(Template)]
+#[template( path = "license.html" )]
+#[allow(dead_code)]
+pub struct LicensePage {
+    pub env: Env
+}
+
 pub async fn uploaded(query: HashMap<String, String>, state: SharedState) -> Result<Html<String>, Rejection> {
 
     if ! query.contains_key("file") {
@@ -96,8 +110,38 @@ pub fn passworded_f(state: SharedState) -> impl Filter<Extract = impl Reply, Err
         .and_then(passworded)
 }
 
+pub async fn authors(state: SharedState) -> Result<Html<String>, Rejection> {
+    let rendered = AuthorsPage {
+        env: state.env
+    };
+    Ok(warp::reply::html(rendered.render().map_err(|err| warp::reject::custom(HttpReject::AskamaError(err)))?))
+}
+
+pub fn authors_f(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
+    warp::path!("authors")
+        .and(warp::path::end())
+        .map(move || state.clone())
+        .and_then(authors)
+}
+
+pub async fn license(state: SharedState) -> Result<Html<String>, Rejection> {
+    let rendered = LicensePage {
+        env: state.env
+    };
+    Ok(warp::reply::html(rendered.render().map_err(|err| warp::reject::custom(HttpReject::AskamaError(err)))?))
+}
+
+pub fn license_f(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
+    warp::path!("license")
+        .and(warp::path::end())
+        .map(move || state.clone())
+        .and_then(license)
+}
+
 pub fn get_routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
     index_f(state.clone())
         .or(uploaded_f(state.clone()))
-        .or(passworded_f(state))
+        .or(passworded_f(state.clone()))
+        .or(authors_f(state.clone()))
+        .or(license_f(state))
 }

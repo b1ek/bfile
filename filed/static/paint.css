@@ -207,20 +207,33 @@ p {
 }
 
 .footer {
-    width: 100%;
+    width: 80%;
     height: var(--footer-height);
+    padding: 20px 10%;
+}
+.footer small {
+    font-size: 80%;
+    opacity: 0.8;
+}
+.footer ul {
+    font-size: 80%;
+}
+.footer a {
+    color: #888888 !important;
 }
 .footer table {
-    height: 100%;
+    width: 100%;
 }
-.footer td {
-    padding: var(--header-padding-y);
-    border-right: 1px solid var(--header-sec-color);
-    text-align: center;
+.footer svg {
+    position: absolute;
+    bottom: -10px;
+    right: 10%;
+    color: var(--header-color);
+    transition: 500ms ease;
+    filter: brightness(1.2);
 }
-.footer td .btn {
-    display: block;
-    padding: 8px;
+.footer svg:hover {
+    filter: brightness(1.4);
 }
 
 input[type=text],

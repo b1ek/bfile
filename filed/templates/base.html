@@ -14,6 +14,9 @@
         <link rel="stylesheet" href="/js-only.css" />
         <script src="/delay.js"></script>
         <title>blek! File</title>
+
+        <style> .footer svg { height: 32px } </style>
+
         {% include "seotags.html" %}
         {% block head %}{% endblock %}
     </head>
@@ -27,23 +30,29 @@
             {% block body %}{% endblock %}
         </div>
         <div class="footer">
-            <table width='100%'>
-                <tbody>
-                    <tr>
-                        <td>
-                            Made with Rust
-                        </td>
-                        <td>
-                            Released under GPLv3
-                        </td>
-                        <td>
-                            <a href='https://git.blek.codes/blek/bfile' class='btn'>
-                                Source code
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <small>Made with Rust and &lt;3</small>
+
+            <ul style='margin:10px 0'>
+                <li>
+                    <a href="https://git.blek.codes/blek/bfile">
+                        Source code
+                    </a>
+                </li>
+                <li>
+                    <a href="/license">
+                        Released under GPLv3
+                    </a>
+                </li>
+                <li>
+                    <a href="/authors">
+                        Made by blek! and contributors
+                    </a>
+                </li>
+            </ul>
+
+            <a href="https://blek.codes">
+                {% include "blek.svg" %}
+            </a>
         </div>
 
         <script src="/js-only.js"></script>

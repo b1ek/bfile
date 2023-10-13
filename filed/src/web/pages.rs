@@ -61,6 +61,13 @@ pub struct LicensePage {
     pub env: Env
 }
 
+#[derive(Template)]
+#[template( path = "tos.html" )]
+#[allow(dead_code)]
+pub struct TOSPage {
+    pub env: Env
+}
+
 pub async fn uploaded(query: HashMap<String, String>, state: SharedState) -> Result<Html<String>, Rejection> {
 
     if ! query.contains_key("file") {
@@ -138,10 +145,25 @@ pub fn license_f(state: SharedState) -> impl Filter<Extract = impl Reply, Error 
         .and_then(license)
 }
 
+pub async fn tos(state: SharedState) -> Result<Html<String>, Rejection> {
+    let rendered = TOSPage {
+        env: state.env
+    };
+    Ok(warp::reply::html(rendered.render().map_err(|err| warp::reject::custom(HttpReject::AskamaError(err)))?))
+}
+
+pub fn tos_f(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
+    warp::path!("tos")
+        .and(warp::path::end())
+        .map(move || state.clone())
+        .and_then(tos)
+}
+
 pub fn get_routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
     index_f(state.clone())
         .or(uploaded_f(state.clone()))
         .or(passworded_f(state.clone()))
         .or(authors_f(state.clone()))
-        .or(license_f(state))
+        .or(license_f(state.clone()))
+        .or(tos_f(state))
 }

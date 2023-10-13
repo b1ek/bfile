@@ -13,9 +13,9 @@ use serde::Serialize;
 
 use crate::files::{File, lookup::LookupKind, DeleteMode};
 
-use super::{state::SharedState, pages::{BadActionReq, UploadSuccessPage}, rejection::HttpReject};
+use super::{state::SharedState, pages::{BadActionReq, UploadSuccessPage, self}, rejection::HttpReject};
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone)]
 struct FormElement {
     data: Vec<u8>,
     mime: String
@@ -67,7 +67,31 @@ pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>
     let delmode = params.get("delmode").unwrap();
     let named = params.get("named");
     let filename = params.get("filename").unwrap();
+    let tos_check = match params.get("tos_consent") {
+        Some(v) => (*v).clone(),
+        None => FormElement { data: "off".as_bytes().to_vec(), mime: "text/plain".into() }
+    };
     let mut is_named = named.is_none();
+    let tos_check = tos_check.as_str_or_reject()?;
+    if tos_check != "on" {
+        return Ok(
+            Box::new(
+                warp::reply::html(
+                    pages::ErrorPage {
+                        env: state.env,
+                        error_text: "You must consent to the terms and conditions!".into(),
+                        link: Some("/".into()),
+                        link_text: Some("Go back".into())
+                    }
+                    .render()
+                    .map_err(
+                        |err|
+                        warp::reject::custom(HttpReject::AskamaError(err))
+                    )?
+                )
+            )
+        )
+    }
 
     let delmode = delmode.as_str_or_reject()?;
     if delmode != "30" && delmode != "dl" {

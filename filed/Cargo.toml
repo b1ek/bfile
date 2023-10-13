@@ -27,3 +27,6 @@ warp = "0.3.6"
 [profile.release]
 opt-level = 'z'
 lto = true
+
+[build-dependencies]
+css-minify = "0.3.1"

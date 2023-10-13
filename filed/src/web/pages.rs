@@ -68,6 +68,17 @@ pub struct TOSPage {
     pub env: Env
 }
 
+
+#[derive(Template)]
+#[template( path = "error.html" )]
+#[allow(dead_code)]
+pub struct ErrorPage {
+    pub env: Env,
+    pub error_text: String,
+    pub link: Option<String>,
+    pub link_text: Option<String>
+}
+
 pub async fn uploaded(query: HashMap<String, String>, state: SharedState) -> Result<Html<String>, Rejection> {
 
     if ! query.contains_key("file") {

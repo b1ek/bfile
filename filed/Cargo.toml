@@ -30,3 +30,4 @@ lto = true
 
 [build-dependencies]
 css-minify = "0.3.1"
+minify-js = "0.5.6"

@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use argon2::{PasswordVerifier, PasswordHash};
 use base64::{alphabet, engine, Engine};
 use warp::{Filter, reply::Reply, reject::Rejection};
@@ -37,6 +39,9 @@ pub async fn uploaded((file, state): (String, SharedState), authorization: Optio
             let user_pass = user_pass.last().unwrap().to_string();
 
             log::debug!("User provided a password: \"{}\"", user_pass);
+            log::debug!("Halting for 5 seconds");
+            tokio::time::sleep(Duration::from_secs(5)).await;
+
             let argon = crate::security::get_argon2();
             let hash = PasswordHash::parse(&pass, argon2::password_hash::Encoding::B64).unwrap();
 

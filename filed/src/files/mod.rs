@@ -33,7 +33,7 @@ pub enum DeleteMode {
 
 impl File {
     pub fn expired(self: &Self) -> bool {
-        self.delete_at < chrono::Local::now()
+        self.delete_at > chrono::Local::now()
     }
 
     pub fn get_redis_key(self: &Self, prefix: String) -> String {

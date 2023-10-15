@@ -47,7 +47,7 @@ pub fn loadenv() -> Result<Env, Box<dyn std::error::Error>> {
                 let spath: String = get_var("USERCONTENT_DIR")?;
                 let path = Path::new(&spath);
                 if ! path.exists() {
-                    fs::create_dir_all(path)?;
+                    fs::create_dir_all(path).map_err(|err| format!("Could not create usercontent directory: {err}"))?;
                 }
                 if ! path.is_dir() {
                     return Err(format!("USERCONTENT_DIR is set to \"{}\", which exists but is not a directory!", &spath).into())

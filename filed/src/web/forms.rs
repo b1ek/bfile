@@ -63,14 +63,28 @@ pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>
         ))
     }
 
+    let check_off = FormElement { data: "off".as_bytes().to_vec(), mime: "text/plain".into() };
+
     let data = params.get("file").unwrap();
     let delmode = params.get("delmode").unwrap();
     let named = params.get("named");
     let filename = params.get("filename").unwrap();
     let tos_check = match params.get("tos_consent") {
         Some(v) => (*v).clone(),
-        None => FormElement { data: "off".as_bytes().to_vec(), mime: "text/plain".into() }
+        None => check_off.clone()
     };
+
+    let protected = params.get("passworded").unwrap_or(&check_off.clone()).as_str_or_reject()?;
+    let protected = protected == "on";
+    let password: Option<String> = {
+        let pass = params.get("password");
+        if protected && pass.is_some() {
+            Some(pass.unwrap().as_str_or_reject()?)
+        } else {
+            None
+        }
+    };
+
     let mut is_named = named.is_none();
     let tos_check = tos_check.as_str_or_reject()?;
     if tos_check != "on" {
@@ -123,7 +137,8 @@ pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>
             } else {
                 DeleteMode::TimeOrDownload
             }
-        }
+        },
+        password
     ).await
      .map_err(|err| warp::reject::custom(HttpReject::StringError(err.to_string())))?;
 

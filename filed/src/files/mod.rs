@@ -2,6 +2,7 @@
 
 use std::{sync::Arc, error::Error, ops::Add};
 
+use argon2::{PasswordHash, password_hash::SaltString, Params, PasswordHasher};
 use chrono::{DateTime, Local};
 use redis::AsyncCommands;
 use sha2::{Sha512, Digest, digest::FixedOutput};
@@ -20,6 +21,7 @@ pub struct File {
     pub mime: String,
     pub delete_at: DateTime<Local>,
     pub delete_mode: DeleteMode,
+    pub password: Option<String>, // argon2id hash
     sha512: String
 }
 
@@ -99,7 +101,7 @@ impl File {
         Ok(ndata)
     }
 
-    pub async fn create(data: Vec<u8>, mime: String, name: Option<String>, env: Env, delete_mode: DeleteMode) -> Result<File, Box<dyn Error>> {
+    pub async fn create(data: Vec<u8>, mime: String, name: Option<String>, env: Env, delete_mode: DeleteMode, password: Option<String>) -> Result<File, Box<dyn Error>> {
 
         let mut filename = String::new();
         let mut hash = Sha512::new();
@@ -127,7 +129,18 @@ impl File {
                 mime,
                 delete_at: expires,
                 delete_mode,
-                sha512: hash
+                sha512: hash,
+                password: match password {
+                    Some(pass) => {
+                        // todo!("Remove possible panics on this one");
+                        let argon = crate::security::get_argon2();
+                        let salt = SaltString::generate(&mut rand::thread_rng());
+                        let hash = argon.hash_password(pass.bytes().collect::<Vec<u8>>().as_slice(), &salt).unwrap();
+                        
+                        Some(hash.serialize().to_string())
+                    },
+                    None => None
+                }
             }
         )
     }

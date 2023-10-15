@@ -7,10 +7,12 @@ mod env;
 mod web;
 mod db;
 
+pub mod security;
+
 #[tokio::main]
 async fn main() {
     dotenvy::dotenv().unwrap();
-    let envy = env::loadenv().unwrap();
+    let envy = env::loadenv().map_err(|err| format!("Could not load env: {err}")).unwrap();
 
     // set up logging
     if envy.logging {

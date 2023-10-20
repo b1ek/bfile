@@ -1,0 +1,46 @@
+# Welcome to the filed main configuration file!
+# The comments in this file will be your guide to configuring it to fit your needs.
+
+# If you wish there were an option in this file,
+# open an issue or a PR at the git repo:
+# https://git.blek.codes/blek/bfile
+
+[files]
+
+# Allow uploads to this server.
+# Its useful to turn it off during attacks
+allow_uploads=true
+
+# Allow custom names for files
+allow_custom_names=true
+
+# Allow password protection
+allow_pass_protection=true
+
+# How much files can one
+# user have uploaded to the server.
+# Note that it does not include expired files
+max_per_ip=8
+
+# Timeout for deleting a user uploaded file
+file_del_timeout=1800
+
+# Whitelisted file types.
+# If you uncomment the line below, users
+# will be able to upload only plain text files
+# List: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+
+# type_whitelist=[ "text/plain" ]
+
+# Same as the option above, but in reverse.
+# If you uncomment the line below, users will not be able
+# to upload plain text files
+# type_blacklist=[ "text/plain" ]
+
+# Name of the instance.
+# Change it to fit your website's image
+instance_name="blek! File"
+
+# URL of the instance.
+# You must set this to a valid URL
+instance_url=""

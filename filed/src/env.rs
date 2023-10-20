@@ -68,6 +68,9 @@ pub fn loadenv() -> Result<Env, Box<dyn std::error::Error>> {
 
                 if ! path.is_file() {
 
+                    log::error!("Config file is not a file");
+                    log::info!("Trying to recover from error");
+
                     if ! dirpath.is_dir() {
                         log::info!("The config file directory does not exist. Trying to create it");
 
@@ -86,11 +89,12 @@ pub fn loadenv() -> Result<Env, Box<dyn std::error::Error>> {
 
                         if wrote.is_err() {
                             log::warn!("Could not write example because of the following error: {:?}", wrote.unwrap_err());
-                            log::info!("Giving up");
                         } else {
                             log::info!("Wrote example to {}", spath);
                         }
                     }
+
+                    log::info!("Giving up");
                     return Err(format!("CONF_FILE is {}, which is not a file!", spath).into())
                 }
                 spath

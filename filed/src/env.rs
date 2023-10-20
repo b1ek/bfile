@@ -62,18 +62,30 @@ pub fn loadenv() -> Result<Env, Box<dyn std::error::Error>> {
             confpath: {
                 let spath: String = get_var("CONF_FILE").unwrap_or("/etc/filed/filed.toml".into());
                 let path = Path::new(&spath);
-                let mut dirpath = path.clone().components();
+                let mut dirpath = path.components();
                 dirpath.next_back();
                 let dirpath = dirpath.as_path();
 
                 if ! path.is_file() {
-                    if dirpath.is_dir() {
-                        log::info!("Config file does not exist, but found config directory. Trying to write the example");
 
-                        let wrote = fs::write(path, DEFAULT_CONFIG.clone());
+                    if ! dirpath.is_dir() {
+                        log::info!("The config file directory does not exist. Trying to create it");
+
+                        let created = fs::create_dir_all(dirpath);
+                        if created.is_err() {
+                            log::warn!("Could not create the config directory: {:?}", created.unwrap_err());
+                        } else {
+                            log::info!("Created the config directory");
+                        }
+                    }
+
+                    if dirpath.is_dir() {
+                        log::info!("Config file does not exist, trying to write the example");
+
+                        let wrote = fs::write(path, DEFAULT_CONFIG);
 
                         if wrote.is_err() {
-                            log::info!("Could not write example because of the following error: {:?}", wrote.unwrap_err());
+                            log::warn!("Could not write example because of the following error: {:?}", wrote.unwrap_err());
                             log::info!("Giving up");
                         } else {
                             log::info!("Wrote example to {}", spath);

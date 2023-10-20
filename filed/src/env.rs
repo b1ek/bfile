@@ -5,6 +5,8 @@
 
 use std::{env::var, net::SocketAddr, path::Path, fs};
 
+pub const DEFAULT_CONFIG: &'static str = include_str!("../config/filed.toml.example");
+
 #[derive(Debug, Clone)]
 pub struct Redis {
     pub pass: String,
@@ -60,7 +62,23 @@ pub fn loadenv() -> Result<Env, Box<dyn std::error::Error>> {
             confpath: {
                 let spath: String = get_var("CONF_FILE").unwrap_or("/etc/filed/filed.toml".into());
                 let path = Path::new(&spath);
+                let mut dirpath = path.clone().components();
+                dirpath.next_back();
+                let dirpath = dirpath.as_path();
+
                 if ! path.is_file() {
+                    if dirpath.is_dir() {
+                        log::info!("Config file does not exist, but found config directory. Trying to write the example");
+
+                        let wrote = fs::write(path, DEFAULT_CONFIG.clone());
+
+                        if wrote.is_err() {
+                            log::info!("Could not write example because of the following error: {:?}", wrote.unwrap_err());
+                            log::info!("Giving up");
+                        } else {
+                            log::info!("Wrote example to {}", spath);
+                        }
+                    }
                     return Err(format!("CONF_FILE is {}, which is not a file!", spath).into())
                 }
                 spath

@@ -26,6 +26,7 @@ html, body {
     --header-padding-x: 16px;
     --header-padding-y: 12px;
     --header-font-size: 12pt;
+    --header-height: 50px;
 
     --view-color: #1e1e1e;
 
@@ -45,6 +46,7 @@ html, body {
     font-weight: var(--accent-weight);
     font-size: var(--header-font-size);
     padding: var(--header-padding-y) var(--header-padding-x);
+    height: calc(var(--header-height) - (var(--header-padding-y)*2));
 }
 .header svg {
     width: var(--header-font-size);
@@ -52,7 +54,32 @@ html, body {
     transform: translateY(2px);
     padding-right: var(--header-padding-y);
 }
+.header .header-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    opacity: 0.75;
+    z-index: 0;
+    height: calc(var(--header-height) + 12px);
+}
+.header .header-text {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--header-padding-x);
+}
 
+.content-box {
+    position: absolute;
+    top: var(--header-height);
+    width: 100%;
+    height: 100%;
+}
 .content {
     background: var(--view-color);
     border-top: 1px solid var(--header-sec-color);

@@ -18,6 +18,9 @@ fn extfilter(valid: String, x: Option<&OsStr>) -> bool {
 }
 
 fn main() {
+
+    println!("cargo:rerun-if-changed=static/assets");
+
     let assets = fs::read_dir("static/assets").unwrap();
     let assets = assets
         .map(|x| x.unwrap().path())

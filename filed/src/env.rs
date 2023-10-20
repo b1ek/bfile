@@ -58,7 +58,7 @@ pub fn loadenv() -> Result<Env, Box<dyn std::error::Error>> {
             instanceurl: get_var("INSTANCE_URL")?,
             uploadspath: get_var("UPLOADS_PATH")?,
             confpath: {
-                let spath: String = get_var("CONF_FILE").unwrap_or("/etc/filed".into());
+                let spath: String = get_var("CONF_FILE").unwrap_or("/etc/filed/filed.toml".into());
                 let path = Path::new(&spath);
                 if ! path.is_file() {
                     return Err(format!("CONF_FILE is {}, which is not a file!", spath).into())

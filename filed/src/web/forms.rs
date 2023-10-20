@@ -53,7 +53,8 @@ pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>
             warp::reply::with_status(
                 warp::reply::html(
                     BadActionReq {
-                        env: state.env.clone()
+                        env: state.env.clone(),
+                        conf: state.config.clone()
                     }
                         .render()
                         .map_err(|err| warp::reject::custom(HttpReject::AskamaError(err.into())))?
@@ -93,6 +94,7 @@ pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>
                 warp::reply::html(
                     pages::ErrorPage {
                         env: state.env,
+                        conf: state.config.clone(),
                         error_text: "You must consent to the terms and conditions!".into(),
                         link: Some("/".into()),
                         link_text: Some("Go back".into())
@@ -152,6 +154,7 @@ pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>
 
     let uploaded = UploadSuccessPage {
         env: state.env.clone(),
+        conf: state.config.clone(),
         link: file.leftmost_link()
     };
 

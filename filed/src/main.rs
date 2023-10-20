@@ -28,5 +28,5 @@ async fn main() {
         femme::with_level(femme::LevelFilter::Off);
     }
 
-    web::serve(envy).await;
+    web::serve(envy, conf).await;
 }

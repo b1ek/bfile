@@ -7,7 +7,7 @@ use std::env::current_dir;
 use static_dir::static_dir;
 use warp::{Filter, reply::Reply, reject::Rejection};
 
-use crate::{env::Env, files::lookup::FileManager};
+use crate::{env::Env, files::lookup::FileManager, config::types::Config};
 
 mod pages;
 mod forms;
@@ -33,7 +33,7 @@ pub fn routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error = R
 /*
  Serve the HTTP server
  */
-pub async fn serve(env: Env) {
+pub async fn serve(env: Env, config: Config) {
 
     log::info!("Listening on {}", env.listen.to_string());
 
@@ -41,7 +41,8 @@ pub async fn serve(env: Env) {
     let state = SharedState {
         redis_cli: redis_cli.clone(),
         env: env.clone(),
-        file_mgr: FileManager::new(redis_cli, env.clone())
+        file_mgr: FileManager::new(redis_cli, env.clone()),
+        config: config.clone()
     };
 
     warp::serve(routes(state)).run(env.listen).await;

@@ -6,6 +6,7 @@ mod files;
 mod env;
 mod web;
 mod db;
+mod config;
 
 pub mod security;
 
@@ -13,6 +14,7 @@ pub mod security;
 async fn main() {
     dotenvy::dotenv().unwrap();
     let envy = env::loadenv().map_err(|err| format!("Could not load env: {err}")).unwrap();
+    let conf = config::types::Config::load(envy.clone()).unwrap();
 
     // set up logging
     if envy.logging {

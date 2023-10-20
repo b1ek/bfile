@@ -20,7 +20,8 @@ pub struct Env {
     pub redis: Redis,
     pub filedir: String,
     pub instanceurl: String,
-    pub uploadspath: String
+    pub uploadspath: String,
+    pub confpath: String
 }
 
 fn get_var<T: Into<String>, O: From<String>>(name: T) -> Result<O, String> {
@@ -55,7 +56,15 @@ pub fn loadenv() -> Result<Env, Box<dyn std::error::Error>> {
                 spath
             },
             instanceurl: get_var("INSTANCE_URL")?,
-            uploadspath: get_var("UPLOADS_PATH")?
+            uploadspath: get_var("UPLOADS_PATH")?,
+            confpath: {
+                let spath: String = get_var("CONF_FILE").unwrap_or("/etc/filed".into());
+                let path = Path::new(&spath);
+                if ! path.is_file() {
+                    return Err(format!("CONF_FILE is {}, which is not a file!", spath).into())
+                }
+                spath
+            }
         }
     )
 }

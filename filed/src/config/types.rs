@@ -57,6 +57,11 @@ pub struct Branding {
     /// Instance motto
     #[serde(default)]
     pub instance_motto: String,
+
+    /// Instance emoji, displayed like this:
+    /// 🌠 blek! File
+    #[serde(default)]
+    pub instance_emoji: char,
     
     /// Instance URL (not the bind URL). Must be Some(...)
     #[serde(default)]
@@ -68,6 +73,7 @@ impl Default for Branding {
         Branding {
             instance_name: "blek! File".into(),
             instance_motto: "A minute file sharing".into(),
+            instance_emoji: '🌠',
             instance_url: None,
         }
     }

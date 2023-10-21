@@ -50,6 +50,10 @@ instance_name="blek! File"
 # Leave a blank string to disable
 instance_motto="A minute file sharing service"
 
+# Instance emoji.
+# Used as the icon where icon images are not available
+instance_emoji="🌠"
+
 # URL of the instance.
 # You must set this to a valid URL
 instance_url=""

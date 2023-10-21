@@ -134,7 +134,7 @@ pub async fn passworded(state: SharedState) -> Result<Html<String>, Rejection> {
 }
 
 pub fn passworded_f(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
-    warp::path!("password-files")
+    warp::path!("passworded-files")
         .and(warp::path::end())
         .map(move || state.clone())
         .and_then(passworded)

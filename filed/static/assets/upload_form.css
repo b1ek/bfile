@@ -1,0 +1,60 @@
+.file-drag-n-drop {
+    display: block;
+    cursor: pointer;
+    width: 440px;
+    height: 440px;
+    background: var(--header-sec-color);
+    border-radius: 16px;
+    padding: var(--header-padding-x);
+    transition: 250ms ease;
+    margin-bottom: 0;
+    border: 0px solid transparent;
+    color: var(--header-fg-color);
+}
+.file-drag-n-drop:hover {
+    background: #393939;
+}
+.file-drag-n-drop * { display: block }
+.file-drag-n-drop object { display: initial }
+.file-drag-n-drop .file-drag-n-drop-inside {
+    padding: var(--header-padding-x);
+    border: 4px dotted #656565;
+    height: calc(100% - 32px - 8px);
+    border-radius: 16px;
+    transition: 250ms ease;
+}
+.file-drag-n-drop .file-drag-n-drop-inside .file-drag-n-drop-inside-text {
+    margin: 0;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    line-height: 32px;
+}
+.mobile-file-upload-btn {
+    display: block;
+    opacity: 0;
+    height: 0;
+    width: calc(100% - 24px);
+    clip-path: inset(0 0 0 0);
+    padding: 0;
+}
+
+@media (max-width:667px) {
+    .file-drag-n-drop {
+        opacity: 0;
+        clip-path: inset(0 0 0 0);
+        height: 0;
+        padding: 0;
+    }
+    .mobile-file-upload-btn {
+        cursor: pointer;
+        height: fit-content;
+        opacity: 1;
+        padding: var(--header-padding-y);
+        text-align: center;
+    }
+    .bfile-formupload-file-delete-pick {
+        margin-bottom: 28px;
+    }
+}

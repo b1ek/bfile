@@ -17,7 +17,7 @@ allow_custom_names=true
 # Allow password protection
 allow_pass_protection=true
 
-# Reson why the uploads are disabled
+# Reason why the uploads are disabled
 # This is shown only if allow_uploads = false
 # upload_disable_reason="File uploads were disabled because of an ongoing attack."
 

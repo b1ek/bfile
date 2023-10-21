@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% block head %}
+
+    {%- if ! conf.files.allow_uploads -%}
+        <link rel="stylesheet" href="/alert.css" />
+    {%- endif -%}
+
+{% endblock %}
+
 {% block body %}
 
 <div style="max-width:95vw;width:fit-content;margin:0 auto">

@@ -282,27 +282,3 @@ input[type=email] {
     padding: 2px 4px;
     outline: none;
 }
-
-.alert {
-    margin: 20px 0;
-    border: 1px solid var(--header-sec-color);
-    border-radius: 12px;
-}
-
-.alert .alert-title {
-    margin: 0;
-    padding: var(--margin-y) var(--margin-x);
-    border-radius: 12px 12px 0 0;
-    border-bottom: 1px solid var(--header-sec-color);
-    background: var(--view-color);
-}
-
-.alert .alert-text {
-    padding: var(--margin-y) var(--margin-x);
-    border-radius: 0 0 12px 12px;
-    margin: 0;
-}
-
-.alert.danger .alert-title {
-    background: #602020;
-}

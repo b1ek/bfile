@@ -7,31 +7,31 @@ use crate::env::Env;
 pub struct FilesPolicy {
     /// Whether the uploads are enabled
     #[serde(default)]
-    allow_uploads: bool,
+    pub allow_uploads: bool,
 
     /// Allow custom names
     #[serde(default)]
-    allow_custom_names: bool,
+    pub allow_custom_names: bool,
 
     /// Allow password protection
     #[serde(default)]
-    allow_pass_protection: bool,
+    pub allow_pass_protection: bool,
 
     /// Max uploads for IP (doesn't include deleted uploads)
     #[serde(default)]
-    max_per_ip: usize,
+    pub max_per_ip: usize,
 
     /// Default time for file to be deleted
     #[serde(default)]
-    file_del_timeout: usize,
+    pub file_del_timeout: usize,
 
     /// Whitelisted file types
     #[serde(default)]
-    type_whitelist: Option<Vec<String>>,
+    pub type_whitelist: Option<Vec<String>>,
 
     /// Backlisted file types
     #[serde(default)]
-    type_blacklist: Option<Vec<String>>,
+    pub type_blacklist: Option<Vec<String>>,
 }
 
 impl Default for FilesPolicy {
@@ -52,15 +52,15 @@ impl Default for FilesPolicy {
 pub struct Branding {
     /// Instance name
     #[serde(default)]
-    instance_name: String,
+    pub instance_name: String,
 
     /// Instance motto
     #[serde(default)]
-    instance_motto: String,
+    pub instance_motto: String,
     
     /// Instance URL (not the bind URL). Must be Some(...)
     #[serde(default)]
-    instance_url: Option<String>,
+    pub instance_url: Option<String>,
 }
 
 impl Default for Branding {
@@ -90,8 +90,8 @@ impl Branding {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Config {
-    files: FilesPolicy,
-    brand: Branding
+    pub files: FilesPolicy,
+    pub brand: Branding
 }
 
 impl Config {

@@ -55,7 +55,7 @@ html, body {
     padding-right: var(--header-padding-y);
 }
 .header .header-bg {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     opacity: 0.75;
@@ -63,7 +63,7 @@ html, body {
     height: calc(var(--header-height) + 12px);
 }
 .header .header-text {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     z-index: 1;

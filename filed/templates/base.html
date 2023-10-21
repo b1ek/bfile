@@ -17,8 +17,8 @@
 
         <style> .footer svg { height: 32px; margin: 10px 0 } </style>
 
-        {% include "seotags.html" %}
-        {% block head %}{% endblock %}
+        {%- include "seotags.html" %}
+        {% block head %}{% endblock -%}
     </head>
 
     <body>
@@ -34,7 +34,7 @@
         </div>
         <div class='content-box'>
             <div class="content">
-                {% block body %}{% endblock %}
+                {%- block body %}{% endblock -%}
             </div>
             <div class="footer">
 
@@ -64,7 +64,7 @@
                             </td>
                             <td style="text-align:right;vertical-align:bottom">
                                 <a href="https://blek.codes">
-                                    {% include "blek.svg" %}
+                                    {%- include "blek.svg" -%}
                                 </a>
                             </td>
                         </tr>
@@ -75,6 +75,6 @@
         </div>
 
         <script src="/js-only.js"></script>
-        {% block scripts %}{% endblock %}
+        {%- block scripts %}{% endblock -%}
     </body>
 </html>

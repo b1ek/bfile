@@ -28,45 +28,50 @@
                             <label for="bfile-formupload-delete-dl">After 30 minutes OR a download</label>
                         </li>
                     </ul>
-                    <p>
-                        <label>
-                            <input type="checkbox" name="named">
-                        </label>
-                        <label for="bfile-formupload-file-name">
-                            I also want my file named:
-                        </label>
-                        <span class="form-input-partial">
-                            <span class="form-input-label">
-                                {{ env.instanceurl }}/
+                    {%- if conf.files.allow_custom_names -%}
+                        <p>
+                            <label>
+                                <input type="checkbox" name="named">
+                            </label>
+                            <label for="bfile-formupload-file-name">
+                                I also want my file named:
+                            </label>
+                            <span class="form-input-partial">
+                                <span class="form-input-label">
+                                    {{ env.instanceurl }}/
+                                </span>
+                                <input style="max-width:100px" id='bfile-formupload-file-name' type="text" name="filename" placeholder="file.txt"></input>
                             </span>
-                            <input style="max-width:100px" id='bfile-formupload-file-name' type="text" name="filename" placeholder="file.txt"></input>
-                        </span>
-                    </p>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <label>
-                                        <input type="checkbox" name="passworded">
-                                        I want to add a password to the file:
-                                    
-                                        <span style="font-size:80%;display:block">
-                                            Warning: the file WILL NOT be encrypted,<br/>
-                                            therefore this is not 100% secure.<br/>
-                                            <a href="/passworded-files">
-                                                Learn more
-                                            </a>
-                                        </span>
-                                    </label>
-                                </td>
-                                <td style="padding-left:4px">
-                                    <label>
-                                        <input type="password" name="password" style="max-width:90px">
-                                    </label>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        </p>
+                    {%- endif -%}
+
+                    {%- if conf.files.allow_pass_protection -%}
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <input type="checkbox" name="passworded">
+                                            I want to add a password to the file:
+                                        
+                                            <span style="font-size:80%;display:block">
+                                                Warning: the file WILL NOT be encrypted,<br/>
+                                                therefore this is not 100% secure.<br/>
+                                                <a href="/passworded-files">
+                                                    Learn more
+                                                </a>
+                                            </span>
+                                        </label>
+                                    </td>
+                                    <td style="padding-left:4px">
+                                        <label>
+                                            <input type="password" name="password" style="max-width:90px">
+                                        </label>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    {%- endif -%}
                     <p>
                         <label>
                             <input type="checkbox" name="tos_consent">
@@ -79,38 +84,49 @@
                             </span>
                         </label>
                     </p>
-                    <p>
-                        <input type="file" name="file" id="bfile-formupload-file" style="display: none" />
-                        <label for="bfile-formupload-file">
-                            <span class='btn btn-fill mobile-file-upload-btn'>
-                                Select a file
-                            </span>
-                            <button type="button" class="file-drag-n-drop">
-                                <span class="file-drag-n-drop-inside">
-                                    <span class="file-drag-n-drop-inside-text">
-                                        <object data="/tab-new-symbolic.svg" width="32" height="32" tabindex="-1"></object><br/>
-                                        <span style="line-height:16pt">
-                                            <span id='drag-n-drop-jsonly' style='display:none'>
-                                                Drag & drop your files here!
-                                            </span>
-                                            <noscript>
-                                                Click to upload your files!<br/>
-                                                <span style="font-size: 70%">
-                                                    You will be able to drag and drop if you enable JS
+                    {%- if ! conf.files.allow_uploads -%}
+                        <div class="alert danger" style="margin-bottom:4px">
+                            <h1 class="alert-title">
+                                Error
+                            </h1>
+                            <p class="alert-text">
+                                Uploads are temporarily disabled by the administrator.
+                            </p>
+                        </div>
+                    {%- else -%}
+                        <p>
+                            <input type="file" name="file" id="bfile-formupload-file" style="display: none" />
+                            <label for="bfile-formupload-file">
+                                <span class='btn btn-fill mobile-file-upload-btn'>
+                                    Select a file
+                                </span>
+                                <button type="button" class="file-drag-n-drop">
+                                    <span class="file-drag-n-drop-inside">
+                                        <span class="file-drag-n-drop-inside-text">
+                                            <object data="/tab-new-symbolic.svg" width="32" height="32" tabindex="-1"></object><br/>
+                                            <span style="line-height:16pt">
+                                                <span id='drag-n-drop-jsonly' style='display:none'>
+                                                    Drag & drop your files here!
                                                 </span>
-                                            </noscript>
+                                                <noscript>
+                                                    Click to upload your files!<br/>
+                                                    <span style="font-size: 70%">
+                                                        You will be able to drag and drop if you enable JS
+                                                    </span>
+                                                </noscript>
+                                            </span>
                                         </span>
                                     </span>
-                                </span>
+                                </button>
+                                <script src="/dragndrop-form.js"></script>
+                            </label>
+                        </p>
+                        <p>
+                            <button class='btn btn-fill'>
+                                Upload!
                             </button>
-                            <script src="/dragndrop-form.js"></script>
-                        </label>
-                    </p>
-                    <p>
-                        <button class='btn btn-fill'>
-                            Upload!
-                        </button>
-                    </p>
+                        </p>
+                    {%- endif -%}
                 </form>
             </div>
         </div>

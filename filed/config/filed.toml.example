@@ -37,6 +37,11 @@ file_del_timeout=1800
 # to upload plain text files
 # type_blacklist=[ "text/plain" ]
 
+
+# Branding settings:
+# instance name, logo, motto, etc
+[brand]
+
 # Name of the instance.
 # Change it to fit your website's image
 instance_name="blek! File"

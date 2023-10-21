@@ -32,14 +32,6 @@ pub struct FilesPolicy {
     /// Backlisted file types
     #[serde(default)]
     type_blacklist: Option<Vec<String>>,
-
-    /// Instance name
-    #[serde(default)]
-    instance_name: String,
-    
-    /// Instance URL (not the bind URL). Must be Some(...)
-    #[serde(default)]
-    instance_url: Option<String>
 }
 
 impl Default for FilesPolicy {
@@ -52,14 +44,38 @@ impl Default for FilesPolicy {
             file_del_timeout: 1800,
             type_whitelist: None,
             type_blacklist: None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Branding {
+    /// Instance name
+    #[serde(default)]
+    instance_name: String,
+    
+    /// Instance URL (not the bind URL). Must be Some(...)
+    #[serde(default)]
+    instance_url: Option<String>
+}
+
+impl Default for Branding {
+    fn default() -> Self {
+        Branding {
             instance_name: "blek! File".into(),
-            instance_url: None
+            instance_url: None,
         }
     }
 }
 
 impl FilesPolicy {
     pub fn validate(self: &Self) -> Result<(), String> {
+        Ok(())
+    }
+}
+
+impl Branding {
+    fn validate(self: &Self) -> Result<(), String> {
         if self.instance_url.is_none() {
             return Err("Instance url must not be empty!".into());
         }
@@ -69,13 +85,16 @@ impl FilesPolicy {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Config {
-    files: FilesPolicy
+    files: FilesPolicy,
+    brand: Branding
 }
 
 impl Config {
 
     pub fn validate(self: &Self) -> Result<(), String> {
         self.files.validate()?;
+        self.brand.validate()?;
+        
         Ok(())
     }
 

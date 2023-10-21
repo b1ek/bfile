@@ -142,7 +142,7 @@ p {
     margin: var(--margin-y) 0;
 }
 a {
-    color: cyan;
+    color: #ff00a9;
     text-decoration: none;
     transition: 250ms ease;
     border-bottom: 1px solid #ffffff00;
@@ -150,11 +150,11 @@ a {
 a:hover {
     border-bottom-color: #ffffff40;
 }
+a:visited {
+    color: #aa00a9
+}
 a[role=button] {
     color: white
-}
-a:visited {
-    color: darkcyan
 }
 
 .card {

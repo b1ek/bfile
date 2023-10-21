@@ -53,16 +53,21 @@ pub struct Branding {
     /// Instance name
     #[serde(default)]
     instance_name: String,
+
+    /// Instance motto
+    #[serde(default)]
+    instance_motto: String,
     
     /// Instance URL (not the bind URL). Must be Some(...)
     #[serde(default)]
-    instance_url: Option<String>
+    instance_url: Option<String>,
 }
 
 impl Default for Branding {
     fn default() -> Self {
         Branding {
             instance_name: "blek! File".into(),
+            instance_motto: "A minute file sharing".into(),
             instance_url: None,
         }
     }
@@ -94,7 +99,7 @@ impl Config {
     pub fn validate(self: &Self) -> Result<(), String> {
         self.files.validate()?;
         self.brand.validate()?;
-        
+
         Ok(())
     }
 

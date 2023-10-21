@@ -46,6 +46,10 @@ file_del_timeout=1800
 # Change it to fit your website's image
 instance_name="blek! File"
 
+# Instance motto.
+# Leave a blank string to disable
+instance_motto="A minute file sharing service"
+
 # URL of the instance.
 # You must set this to a valid URL
 instance_url=""

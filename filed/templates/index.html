@@ -90,16 +90,16 @@
                                 Error
                             </h1>
                             <p class="alert-text">
-                                Uploads are temporarily disabled by the administrator
+                                Uploads are temporarily disabled
                                 {%- if let Some(disable_reason) = conf.files.upload_disable_reason -%}
-                                    {{- " " -}} because of the following reason:
-                                    <span style="display:block;font-family:monospace;padding:12px 0">
+                                    {{- " " -}} for the following reason:
+                                    <span style="display:block;font-family:monospace;padding-top:12px">
                                         {{- disable_reason -}}
                                     </span>
                                 {%- else -%}
                                     .
                                 {%- endif -%}
-                                <span style="display:block">
+                                <span style="display:block;padding-top:12px">
                                     Check again in a few minutes.
                                 </span>
                             </p>

@@ -25,11 +25,13 @@
         <div class="header">
             <img class="header-bg" src="/bfile-header.webp" width="400px" height="60px">
             <div class='header-text'>
-                {{- conf.brand.instance_name -}}
-                {%- if conf.brand.instance_motto.len() != 0 -%}
-                    {#- Whitespace control is stupid -#}
-                    {{- " - " -}}{{- conf.brand.instance_motto -}}
-                {%- endif -%}
+                <a class="header-home" href="/">
+                    {{- conf.brand.instance_name -}}
+                    {%- if conf.brand.instance_motto.len() != 0 -%}
+                        {#- Whitespace control is stupid -#}
+                        {{- " - " -}}{{- conf.brand.instance_motto -}}
+                    {%- endif -%}
+                </a>
             </div>
         </div>
         <div class='content-box'>

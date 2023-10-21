@@ -124,6 +124,18 @@ p {
     margin: var(--margin-y) 0;
 }
 
+a {
+    color: cyan;
+    text-decoration: none;
+    border-bottom: 1px solid darkcyan;
+}
+a[role=button] {
+    color: white
+}
+a:visited {
+    color: darkcyan
+}
+
 .card {
     background: var(--header-color);
     border: 1px solid var(--header-sec-color);

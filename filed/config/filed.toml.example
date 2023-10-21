@@ -21,11 +21,6 @@ allow_pass_protection=true
 # This is shown only if allow_uploads = false
 # upload_disable_reason="File uploads were disabled because of an ongoing attack."
 
-# How much files can one
-# user have uploaded to the server.
-# Note that it does not include expired files
-max_per_ip=8
-
 # Timeout for deleting a user uploaded file
 file_del_timeout=1800
 

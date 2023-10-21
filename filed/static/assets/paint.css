@@ -123,11 +123,14 @@ b {
 p {
     margin: var(--margin-y) 0;
 }
-
 a {
     color: cyan;
     text-decoration: none;
-    border-bottom: 1px solid darkcyan;
+    transition: 250ms ease;
+    border-bottom: 1px solid #ffffff00;
+}
+a:hover {
+    border-bottom-color: #ffffff40;
 }
 a[role=button] {
     color: white

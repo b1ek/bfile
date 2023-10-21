@@ -5,6 +5,9 @@
 <div style="max-width:95vw;width:fit-content;margin:0 auto;text-align:center">
     <h1>Authors</h1>
     <p>
+        {%- if conf.brand.instance_name != "blek! File" -%}
+            {{ conf.brand.instance_name }} is powered by 
+        {%- endif -%}
         blek! File is free and Open Source software, which is released under the
         <a href="/license">
             GPLv3{# -#}

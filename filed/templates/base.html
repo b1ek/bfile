@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="/form.css" />
         <link rel="stylesheet" href="/js-only.css" />
         <script src="/delay.js"></script>
-        <title>blek! File</title>
+        <title>{{ conf.brand.instance_name }}</title>
 
         <style> .footer svg { height: 32px; margin: 10px 0 } </style>
 
@@ -26,7 +26,11 @@
             <img class="header-bg" src="/bfile-header.webp" width="400px" height="60px">
             <div class='header-text'>
                 {% include "text-x-generic.svg" %}
-                blek! File - a minute file sharing
+                {{- conf.brand.instance_name -}}
+                {%- if conf.brand.instance_motto.len() != 0 -%}
+                    {#- Whitespace control is stupid -#}
+                    {{- " - " -}}{{- conf.brand.instance_motto -}}
+                {%- endif -%}
             </div>
         </div>
         <div class='content-box'>

@@ -62,10 +62,6 @@ pub struct Branding {
     /// 🌠 blek! File
     #[serde(default)]
     pub instance_emoji: char,
-    
-    /// Instance URL (not the bind URL). Must be Some(...)
-    #[serde(default)]
-    pub instance_url: Option<String>,
 }
 
 impl Default for Branding {
@@ -74,7 +70,6 @@ impl Default for Branding {
             instance_name: "blek! File".into(),
             instance_motto: "A minute file sharing".into(),
             instance_emoji: '🌠',
-            instance_url: None,
         }
     }
 }
@@ -87,9 +82,6 @@ impl FilesPolicy {
 
 impl Branding {
     fn validate(self: &Self) -> Result<(), String> {
-        if self.instance_url.is_none() {
-            return Err("Instance url must not be empty!".into());
-        }
         Ok(())
     }
 }

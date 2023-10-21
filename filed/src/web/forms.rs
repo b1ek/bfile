@@ -28,6 +28,12 @@ impl FormElement {
 
 pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>, Rejection> {
 
+    if ! state.config.files.allow_uploads {
+        return Ok(
+            Box::new(warp::redirect(warp::http::Uri::from_static("/")))
+        )
+    }
+
     let params: HashMap<String, FormElement> = form.and_then(|mut field| async move {
         let mut bytes: Vec<u8> = vec![];
         while let Some(byte) = field.data().await {
@@ -78,11 +84,15 @@ pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>
     let protected = params.get("passworded").unwrap_or(&check_off.clone()).as_str_or_reject()?;
     let protected = protected == "on";
     let password: Option<String> = {
-        let pass = params.get("password");
-        if protected && pass.is_some() {
-            Some(pass.unwrap().as_str_or_reject()?)
-        } else {
+        if ! state.config.files.allow_pass_protection {
             None
+        } else {
+            let pass = params.get("password");
+            if protected && pass.is_some() {
+                Some(pass.unwrap().as_str_or_reject()?)
+            } else {
+                None
+            }
         }
     };
 
@@ -115,22 +125,22 @@ pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>
     }
     
     if named.is_some() {
-        is_named = named.unwrap().as_str_or_reject()? == "on";
+        if state.config.files.allow_custom_names {
+            is_named = false;
+        } else {
+            is_named = named.unwrap().as_str_or_reject()? == "on";
+        }
     }
 
     let file = File::create(
         data.data.clone(),
         data.mime.clone(),
-        match named {
-            Some(named) => {
-                if named.as_str_or_reject()?
-                    .to_string() == "on" {
-                    Some(filename.as_str_or_reject()?)
-                } else {
-                    None
-                }
-            },
-            None => None
+        {
+            if is_named {
+                Some(filename.as_str_or_reject()?)
+            } else {
+                None
+            }
         },
         state.env.clone(),
         {

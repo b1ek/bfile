@@ -85,12 +85,23 @@
                         </label>
                     </p>
                     {%- if ! conf.files.allow_uploads -%}
-                        <div class="alert danger" style="margin-bottom:4px">
+                        <div class="alert danger" style="width:426px">
                             <h1 class="alert-title">
                                 Error
                             </h1>
                             <p class="alert-text">
-                                Uploads are temporarily disabled by the administrator.
+                                Uploads are temporarily disabled by the administrator
+                                {%- if let Some(disable_reason) = conf.files.upload_disable_reason -%}
+                                    {{- " " -}} because of the following reason:
+                                    <span style="display:block;font-family:monospace;padding:12px 0">
+                                        {{- disable_reason -}}
+                                    </span>
+                                {%- else -%}
+                                    .
+                                {%- endif -%}
+                                <span style="display:block">
+                                    Check again in a few minutes.
+                                </span>
                             </p>
                         </div>
                     {%- else -%}

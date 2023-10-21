@@ -17,6 +17,11 @@ pub struct FilesPolicy {
     #[serde(default)]
     pub allow_pass_protection: bool,
 
+    /// Reson why the uploads are disabled
+    /// This is shown only if allow_uploads = false
+    #[serde(default)]
+    pub upload_disable_reason: Option<String>,
+
     /// Max uploads for IP (doesn't include deleted uploads)
     #[serde(default)]
     pub max_per_ip: usize,
@@ -40,6 +45,7 @@ impl Default for FilesPolicy {
             allow_uploads: true,
             allow_custom_names: true,
             allow_pass_protection: true,
+            upload_disable_reason: None,
             max_per_ip: 8,
             file_del_timeout: 1800,
             type_whitelist: None,

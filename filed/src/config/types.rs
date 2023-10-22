@@ -75,6 +75,55 @@ impl Default for Branding {
     }
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct APISettings {
+    /// If API is enabled
+    #[serde(default)]
+    pub enabled: bool,
+
+    /// Password
+    #[serde(default)]
+    pub apikeys: Option<Vec<String>>,
+
+    /// Whether /api/get_all is enabled
+    #[serde(default)]
+    pub get_all: bool,
+
+    /// Whether to return only the
+    /// user IP's files on /api/get_all
+    #[serde(default)]
+    pub get_all_own_only: bool,
+
+    /// Whether /api/delete is enabled
+    #[serde(default)]
+    pub delete: bool,
+
+    /// If /api/delete can delete any file,
+    /// not only the own file
+    /// (with API key provided)
+    #[serde(default)]
+    pub sudo_delete: bool,
+
+    /// Whether /api/upload is enabled
+    #[serde(default)]
+    pub upload: bool,
+}
+
+impl Default for APISettings {
+    fn default() -> Self {
+        APISettings {
+            enabled: true,
+            apikeys: None,
+            get_all: true,
+            get_all_own_only: true,
+            delete: false,
+            sudo_delete: false,
+            upload: false
+        }
+    }
+}
+
+
 impl FilesPolicy {
     pub fn validate(self: &Self) -> Result<(), String> {
         Ok(())
@@ -87,10 +136,17 @@ impl Branding {
     }
 }
 
+impl APISettings {
+    fn validate(self: &Self) -> Result<(), String> {
+        Ok(())
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Config {
     pub files: FilesPolicy,
-    pub brand: Branding
+    pub brand: Branding,
+    pub api: APISettings
 }
 
 impl Config {
@@ -98,6 +154,7 @@ impl Config {
     pub fn validate(self: &Self) -> Result<(), String> {
         self.files.validate()?;
         self.brand.validate()?;
+        self.api  .validate()?;
 
         Ok(())
     }

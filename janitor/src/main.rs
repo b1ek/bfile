@@ -31,8 +31,9 @@ async fn clean(env: env::Env, state: State) -> CleanResult {
 
     #[cfg(debug_assertions)] {
         log::debug!("Cleaned successfully");
-        return CleanResult::ScheduleNext(chrono::Local::now() + env.clean_del);
     }
+    
+    CleanResult::ScheduleNext(chrono::Local::now() + env.clean_del)
 }
 
 #[tokio::main]

@@ -4,8 +4,14 @@
 Even though this project is mature enough to be deployed in a public instance,
 this is highly discouraged.  
 However, if you do this, be prepared for [DOS](https://en.wikipedia.org/wiki/Denial-of-service_attack) issues and API changes.
+<br/>
 
-# blek! File
+<h1 align='center'>
+    <img src="./filed/static/android-chrome-192x192.png"/>
+    <br/>
+    blek! File
+</h1>
+
 blek! File is a free service that would help you with file sharing.
 
 The principle is very simple: you upload a file, then download it from another device. The file will be deleted after 1 download or 30 minutes.
@@ -25,3 +31,6 @@ $ nvim .env # you need to edit this file
 # docker-compose up -d # "#" at the start means that the command must be run as root/sudo
 $ # It all should me up and running at this point
 ```
+
+## Screenshots
+![Main page!](https://files.blek.codes/file_ui.webp)

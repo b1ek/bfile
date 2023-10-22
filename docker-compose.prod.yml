@@ -7,9 +7,8 @@ services:
         networks:
             bfile:
         volumes:
-            - './filed:/opt/code'
-            - './filed/config:/etc/filed'
-            - '/opt/code/target'
+            - './filed:/config:ro'
+            - './filed/config:/etc/filed:ro'
             - './volatile/files:/opt/user_uploads'
     janitord:
         build:
@@ -18,7 +17,7 @@ services:
         networks:
             bfile:
         volumes:
-            - './janitor:/opt/code'
+            - './janitor:/config:ro'
             - './volatile/files:/opt/user_uploads'
     caddy:
         image: caddy:alpine

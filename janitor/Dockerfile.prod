@@ -12,5 +12,8 @@ RUN strip target/release/janitor && upx --best target/release/janitor
 # --- deploy ---
 FROM busybox:musl
 
+RUN mkdir /config
+WORKDIR /config
+
 COPY --from=builder /opt/build/target/release/janitor /bin/janitor
 CMD [ "/bin/janitor" ]

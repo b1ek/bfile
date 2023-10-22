@@ -13,5 +13,8 @@ RUN strip target/release/filed && upx --best target/release/filed
 # --- deploy ---
 FROM busybox:musl
 
+RUN mkdir /config
+WORKDIR /config
+
 COPY --from=builder /opt/build/target/release/filed /bin/filed
 CMD [ "/bin/filed" ]

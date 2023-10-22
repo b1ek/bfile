@@ -2,14 +2,14 @@ use warp::{reply::{Reply, json}, reject::Rejection, Filter, http::StatusCode};
 
 use crate::web::{state::SharedState, rejection::HttpReject};
 
-use super::types::ErrorMessage;
+use super::super::types::{ErrorMessage, Error};
 
 pub async fn get_all(state: SharedState) -> Result<Box<dyn Reply>, Rejection> {
     if ! state.config.api.enabled {
         return Ok(
             Box::new(
                 warp::reply::with_status(
-                    json(&ErrorMessage::new(super::types::Error::APIDisabled)),
+                    json(&ErrorMessage::new(Error::APIDisabled)),
                     StatusCode::SERVICE_UNAVAILABLE
                 )
             )

@@ -1,11 +1,11 @@
 use warp::{reply::Reply, reject::Rejection, Filter};
 use serde::{Serialize, Deserialize};
 
-use self::get_all::get_all_f;
+use self::files::get_all::get_all_f;
 
 use super::state::SharedState;
 
-mod get_all;
+mod files;
 mod types;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

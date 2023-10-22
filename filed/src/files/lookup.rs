@@ -1,7 +1,7 @@
 
 use std::error::Error;
 
-use redis::{Client, Commands};
+use redis::{Client, Commands, AsyncCommands, Connection};
 
 use crate::env::Env;
 
@@ -22,6 +22,60 @@ impl FileManager {
     pub fn new(conn: Client, env: Env) -> FileManager {
         FileManager { conn, env }
     }
+
+    async fn find_all(self: &Self, predicate: String) -> Result<Vec<File>, Box<dyn Error>> {
+        let mut conn = self.conn.get_async_connection().await?;
+        let found: Vec<String> = conn.keys(predicate).await?;
+        let serialized: Vec<File> = 
+                found.iter()
+                    .map(|x| {
+                        let result = serde_json::from_str(&x);
+                        match result {
+                            Ok(x) => Some(x),
+                            Err(err) => {
+                                log::error!("Error while serializing {x}: {:?}", err);
+                                None
+                            }
+                        }
+                    })
+                    .filter(|x| x.is_some())
+                    .map(|x| x.unwrap())
+                    .collect();
+        Ok(serialized)
+    }
+
+    /// Filter options
+    /// ```
+    /// names: Find files with names  
+    /// hash:  Find files without names  
+    /// ```
+    /// 
+    /// If both of those are false, this function will be optimized out
+    pub async fn get_all(self: &Self, names: bool, hash: bool) -> Result<Vec<File>, Box<dyn Error>> {
+        if (!names) && (!hash) {
+            return Ok(vec![]);
+        }
+
+        let mut conn = self.conn.get_async_connection().await?;
+        let mut out = vec![];
+
+        if names {
+            self.find_all(format!("{}-name-*", self.env.redis.prefix))
+                .await?
+                .iter()   
+                .for_each(|x| out.push(x.clone()));
+        }
+
+        if hash {
+            self.find_all(format!("{}-hash-*", self.env.redis.prefix))
+                .await?
+                .iter()   
+                .for_each(|x| out.push(x.clone()));
+        }
+
+        Ok(out)
+    }
+
     fn find(self: &Self, key: String) -> Result<Option<File>, Box<dyn Error>> {
         let mut conn = self.conn.get_connection()?;
         

@@ -6,6 +6,7 @@ use self::get_all::get_all_f;
 use super::state::SharedState;
 
 mod get_all;
+mod types;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct APIError {

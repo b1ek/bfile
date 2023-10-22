@@ -4,7 +4,8 @@ FROM rust:alpine as builder
 WORKDIR /opt/build
 COPY . .
 
-RUN apk add --no-cache musl-dev upx
+RUN apk add --no-cache musl-dev upx nodejs yarn && \
+    yarn global add uglify-js
 
 RUN cargo b -r
 RUN strip target/release/filed && upx --best target/release/filed

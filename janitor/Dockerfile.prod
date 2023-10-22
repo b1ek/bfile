@@ -7,10 +7,10 @@ COPY . .
 RUN apk add --no-cache musl-dev upx
 
 RUN cargo b -r
-RUN strip target/release/filed && upx --best target/release/filed
+RUN strip target/release/janitor && upx --best target/release/janitor
 
 # --- deploy ---
 FROM busybox:musl
 
-COPY --from=builder /opt/build/target/release/filed /bin/filed
-CMD [ "/bin/filed" ]
+COPY --from=builder /opt/build/target/release/janitor /bin/janitor
+CMD [ "/bin/janitor" ]

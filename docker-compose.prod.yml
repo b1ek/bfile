@@ -1,0 +1,44 @@
+version: '3.7'
+services:
+    filed:
+        build:
+            context: filed
+            dockerfile: Dockerfile.prod
+        networks:
+            bfile:
+        volumes:
+            - './filed:/opt/code'
+            - './filed/config:/etc/filed'
+            - '/opt/code/target'
+            - './volatile/files:/opt/user_uploads'
+    janitord:
+        build:
+            context: janitor
+            dockerfile: Dockerfile.prod
+        networks:
+            bfile:
+        volumes:
+            - './janitor:/opt/code'
+            - './volatile/files:/opt/user_uploads'
+    caddy:
+        image: caddy:alpine
+        volumes:
+            - './conf/caddy:/etc/caddy:ro'
+        ports:
+            - 80:80
+        networks:
+            bfile:
+    redis:
+        image: redis:alpine
+        networks:
+            bfile:
+        command: [ 'redis-server', '--requirepass', '$REDIS_PASS' ]
+        ports:
+            - 6379:6379
+    qr:
+        image: blekii/miniqr
+        networks:
+            bfile:
+
+networks:
+    bfile:

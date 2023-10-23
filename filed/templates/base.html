@@ -17,6 +17,10 @@
 
         <style> .footer svg { height: 32px; margin: 10px 0 } </style>
 
+        {%- if cfg!(debug_assertions) -%}
+            <link rel="stylesheet" href="/alert.css" />
+        {%- endif -%}
+
         {%- include "seotags.html" %}
         {% block head %}{% endblock -%}
     </head>
@@ -36,6 +40,23 @@
         </div>
         <div class='content-box'>
             <div class="content">
+                {%- if cfg!(debug_assertions) -%}
+                    <div class="alert danger" style="margin:var(--margin-y) auto;width:fit-content;margin-bottom:calc(var(--margin-y) * 3)">
+                        <h1 class="alert-title">
+                            Website running in debug mode
+                        </h1>
+                        <div class="alert-text">
+                            <p>
+                                Website is running in development mode that is supposed <br/>
+                                to be used only for local development purposes.
+                            </p>
+                            <p>
+                                If you see this in a public instance, <br/>
+                                Please inform the maintainers of the instance of the issue.
+                            </p>
+                        </div>
+                    </div>
+                {%- endif -%}
                 {%- block body %}{% endblock -%}
             </div>
             <div class="footer">

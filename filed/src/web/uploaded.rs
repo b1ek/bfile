@@ -19,6 +19,7 @@ pub async fn uploaded((file, state): (String, SharedState), authorization: Optio
         .map_err(|x| warp::reject::custom(HttpReject::StringError(x.to_string())))?;
     
     if file_res.is_none() {
+        log::debug!("Trying to find by name");
         file_res = state.file_mgr.find_by_name(file.clone())
             .map_err(|x| warp::reject::custom(HttpReject::StringError(x.to_string())))?;
     }

@@ -155,9 +155,32 @@ pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>
 
     let params: HashMap<String, FormElement> = FormElement::from_formdata(form).await.map_err(|x| HttpReject::WarpError(x))?;
     let formdata = UploadFormData::from_formdata(params.clone());
-    
+
     if let Some(formdata) = formdata {
 
+        let mut breaks_conf = false;
+        if (!state.config.files.allow_custom_names) && formdata.filename.is_some() {
+            breaks_conf = true;
+        }
+        if (!state.config.files.allow_pass_protection) && formdata.password.is_some() {
+            breaks_conf = true;
+        }
+        
+        if breaks_conf {
+            let error = ErrorPage {
+                env: state.env,
+                conf: state.config,
+                error_text: "Attempt to set name or password when they are disabled".into(),
+                link: None,
+                link_text: None
+            };
+            return Ok(
+                bad_req_html(
+                    error.render()
+                        .map_err(|x| HttpReject::AskamaError(x))?
+                )
+            );
+        }
         if ! formdata.tos_consent {
             let error = ErrorPage {
                 env: state.env,

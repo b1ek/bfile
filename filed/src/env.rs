@@ -3,7 +3,7 @@
  This file provides the `loadenv` function that will do just that.
  */
 
-use std::{env::var, net::SocketAddr, path::Path, fs};
+use std::{env::var, net::{SocketAddr, ToSocketAddrs, IpAddr}, path::Path, fs};
 
 pub const DEFAULT_CONFIG: &'static str = include_str!("../config/filed.toml.example");
 
@@ -19,6 +19,7 @@ pub struct Redis {
 pub struct Env {
     pub logging: bool,
     pub listen: SocketAddr,
+    pub proxy_addr: IpAddr,
     pub redis: Redis,
     pub filedir: String,
     pub instanceurl: String,
@@ -40,6 +41,32 @@ pub fn loadenv() -> Result<Env, Box<dyn std::error::Error>> {
         Env {
             logging: get_var::<&str, String>("APP_LOGGING")?.to_lowercase() == "true",
             listen: get_var::<&str, String>("APP_HOST")?.parse::<SocketAddr>().unwrap(),
+            proxy_addr: {
+                let env_var = get_var::<&str, String>("PROXY_IP")?;
+
+                let ip = env_var.parse::<IpAddr>();
+                if let Ok(ip) = ip {
+                    if ip == IpAddr::from([127, 0, 0, 1]) {
+                        log::warn!("Proxy address is 127.0.0.1. No proxy will be trusted")
+                    }
+                    if ip == IpAddr::from([0, 0, 0, 0]) {
+                        log::warn!("Proxy address is 0.0.0.0. All proxies will be trusted.");
+                        #[cfg(not(debug_assertions))]
+                            log::warn!("The warning above will not work well with production mode! Please consider setting the proxy address to a proper IP.")
+                    }
+                    ip
+                } else {
+                    let sock = env_var.to_socket_addrs();
+                    if let Err(err) = sock {
+                        return Err(format!("Can't resolve {env_var}: {:?}", err).into());
+                    }
+                    let mut addrs = sock.unwrap();
+                    if addrs.len() == 0 {
+                        return Err(format!("{env_var} resolved to nothing").into());
+                    }
+                    addrs.next().unwrap().ip()
+                }
+            },
             redis: Redis {
                 pass: get_var("REDIS_PASS")?,
                 host: get_var("REDIS_HOST")?,

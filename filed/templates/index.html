@@ -114,6 +114,24 @@
                             </p>
                         </div>
                     {%- else -%}
+                        
+                        {%- if let Some(pass) = conf.files.upload_pass -%}
+                            <div class="alert blue">
+                                <h1 class="alert-title">
+                                    Upload password
+                                </h1>
+                                <div class="alert-text">
+                                    <p>This instance requires a password to upload a file.</p>
+                                    <p>
+                                        <label>
+                                            Password:
+                                            <input type="password" name="instance-pass">
+                                        </label>
+                                    </p>
+                                </div>
+                            </div>
+                        {%- endif -%}
+
                         <p>
                             <input type="file" name="file" id="bfile-formupload-file" style="display: none" />
                             <label for="bfile-formupload-file">

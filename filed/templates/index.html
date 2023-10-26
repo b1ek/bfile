@@ -9,6 +9,31 @@
 
 {% endblock %}
 
+{% block scripts %}
+
+{%- if conf.files.upload_pass.is_some() -%}
+
+    {#- Script to disable button when password is not entered -#}
+{#- -#}<script>
+{#- -#}    (
+{#- -#}        ()=>{
+{#- -#}            const pass_inp=document.getElementById("instancepass");
+{#- -#}            const submit=document.getElementById("bfile-upload-submit");
+{#- -#}            submit.setAttribute('disabled',true);
+{#- -#}          
+{#- -#}            pass_inp.onchange=()=>{
+{#- -#}                if(pass_inp.value.length==0)
+{#- -#}                    submit.setAttribute('disabled',true);
+{#- -#}                else submit.removeAttribute('disabled')
+{#- -#}            }
+{#- -#}        }
+{#- -#}    )()
+{#- -#}</script>
+
+{%- endif -%}
+
+{% endblock %}
+
 {% block body %}
 
 <div style="max-width:95vw;width:fit-content;margin:0 auto">
@@ -125,7 +150,7 @@
                                     <p>
                                         <label>
                                             Password:
-                                            <input type="password" name="instancepass">
+                                            <input type="password" name="instancepass" id="instancepass">
                                         </label>
                                     </p>
                                 </div>
@@ -160,7 +185,7 @@
                             </label>
                         </p>
                         <p>
-                            <button class='btn btn-fill'>
+                            <button class='btn btn-fill' id="bfile-upload-submit">
                                 Upload!
                             </button>
                         </p>

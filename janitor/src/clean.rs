@@ -57,9 +57,6 @@ pub async fn check_file(file: String, keys: Vec<String>, prefix: String) -> bool
 
 // check that all files in filesystem exist in the database
 pub async fn fskeep(state: State) -> Result<(), Box<dyn Error>> {
-    let mut redis = state.redis.clone();
-    let keys: Vec<String> = redis.keys(format!("{}*", state.env.redis.prefix))?;
-    let objects = keys.len();
     
     let mut files_s = tokio::fs::read_dir(state.env.usercont_dir).await?;
     let mut files: Vec<String> = vec![];
@@ -71,7 +68,20 @@ pub async fn fskeep(state: State) -> Result<(), Box<dyn Error>> {
     }
 
     #[cfg(debug_assertions)]
-    log::debug!("Got {} objects", objects);
+    log::debug!("Got {} filesystem objects", files.len());
+
+    if files.len() == 0 {
+        #[cfg(debug_assertions)]
+        log::debug!("Nothing to do, optimizing away the fs cleanup");
+        return Ok(());
+    }
+
+    let mut redis = state.redis.clone();
+    let keys: Vec<String> = redis.keys(format!("{}*", state.env.redis.prefix))?;
+    let objects = keys.len();
+
+    #[cfg(debug_assertions)]
+    log::debug!("Got {} DB objects", files.len());
 
     let mut set: JoinSet<bool> = JoinSet::new();
 
@@ -100,36 +110,44 @@ pub async fn fskeep(state: State) -> Result<(), Box<dyn Error>> {
 
 pub async fn clean(state: State) -> Result<(), Box<dyn Error>> {
 
+    #[cfg(debug_assertions)]
+    log::debug!("Clean process started");
+
     let mut redis = state.redis.clone();
     let keys: Vec<String> = redis.keys(format!("{}*", state.env.redis.prefix))?;
     let objects = keys.len();
     
     #[cfg(debug_assertions)]
-    log::debug!("Got {} objects", objects);
+    log::debug!("Got {} DB objects", objects);
     
-    let mut set: JoinSet<bool> = JoinSet::new();
-    for key in keys {
-        set.spawn(check_key(key, redis.clone()));
-    }
-
-    #[cfg(debug_assertions)]
-    let mut del_count = 0_u32;
-
-    while let Some(_deleted) = set.join_next().await {
-
-        #[cfg(debug_assertions)] {
-            if _deleted.is_ok() {
-                if _deleted.unwrap() {
-                    del_count += 1;
-                }
-            }
+    if objects != 0 {
+        let mut set: JoinSet<bool> = JoinSet::new();
+        for key in keys {
+            set.spawn(check_key(key, redis.clone()));
         }
 
-    }
+        #[cfg(debug_assertions)]
+        let mut del_count = 0_u32;
 
-    #[cfg(debug_assertions)] {
-        log::debug!("Deleted {} objects", del_count);
-        log::debug!("Finished checking the DB, checking the filesystem...");
+        while let Some(_deleted) = set.join_next().await {
+
+            #[cfg(debug_assertions)] {
+                if _deleted.is_ok() {
+                    if _deleted.unwrap() {
+                        del_count += 1;
+                    }
+                }
+            }
+
+        }
+
+        #[cfg(debug_assertions)] {
+            log::debug!("Deleted {} objects", del_count);
+            log::debug!("Finished checking the DB, checking the filesystem...");
+        }
+    } else {
+        #[cfg(debug_assertions)]
+        log::debug!("Nothing to do, optimizing away the DB cleanup");
     }
     
     fskeep(state).await?; 

@@ -146,7 +146,7 @@ fn bad_req_html(data: String) -> Box<dyn Reply> {
     )
 }
 
-pub async fn upload(form: FormData, _ip: Option<IpAddr>, state: SharedState) -> Result<Box<dyn Reply>, Rejection> {
+pub async fn upload(form: FormData, ip: Option<IpAddr>, state: SharedState) -> Result<Box<dyn Reply>, Rejection> {
 
     if ! state.config.files.allow_uploads {
         return Ok(
@@ -205,7 +205,8 @@ pub async fn upload(form: FormData, _ip: Option<IpAddr>, state: SharedState) -> 
             formdata.filename.clone(),
             state.env.clone(),
             formdata.delmode,
-            formdata.password
+            formdata.password,
+            ip
         ).await
          .map_err(|x| HttpReject::StringError(x.to_string()))
          ?;

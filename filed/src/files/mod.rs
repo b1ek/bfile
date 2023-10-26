@@ -1,6 +1,6 @@
 #![allow(unused)]
 
-use std::{sync::Arc, error::Error, ops::Add};
+use std::{sync::Arc, error::Error, ops::Add, net::IpAddr};
 
 use argon2::{PasswordHash, password_hash::SaltString, Params, PasswordHasher};
 use chrono::{DateTime, Local};
@@ -22,6 +22,7 @@ pub struct File {
     pub delete_at: DateTime<Local>,
     pub delete_mode: DeleteMode,
     pub password: Option<String>, // argon2id hash
+    pub uploader_ip: Option<IpAddr>,
     sha512: String
 }
 
@@ -101,7 +102,7 @@ impl File {
         Ok(ndata)
     }
 
-    pub async fn create(data: Vec<u8>, mime: String, name: Option<String>, env: Env, delete_mode: DeleteMode, password: Option<String>) -> Result<File, Box<dyn Error>> {
+    pub async fn create(data: Vec<u8>, mime: String, name: Option<String>, env: Env, delete_mode: DeleteMode, password: Option<String>, uploader_ip: Option<IpAddr>) -> Result<File, Box<dyn Error>> {
 
         let mut filename = String::new();
         let mut hash = Sha512::new();
@@ -140,7 +141,8 @@ impl File {
                         Some(hash.serialize().to_string())
                     },
                     None => None
-                }
+                },
+                uploader_ip
             }
         )
     }

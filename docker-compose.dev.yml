@@ -28,6 +28,8 @@ services:
             - 80:80
         networks:
             bfile:
+                aliases:
+                    - caddy
     redis:
         image: redis:alpine
         networks:

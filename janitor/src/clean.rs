@@ -43,7 +43,7 @@ async fn check_key(key: String, mut client: redis::Client) -> bool {
 }
 
 pub async fn check_file(file: String, keys: Vec<String>, prefix: String) -> Result<bool, String> {
-    if ! keys.iter().find(|x| x.chars().skip(prefix.len() + 4 + 2).collect::<String>() == file).is_none() {
+    if keys.iter().find(|x| x.chars().skip(prefix.len() + 4 + 2).collect::<String>() == file).is_none() {
         #[cfg(debug_assertions)] {
             log::debug!("File {file} is marked for deletion because it exists in the filesystem, but is not in the database");
         }

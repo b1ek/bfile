@@ -47,7 +47,7 @@ pub async fn check_file(file: String, keys: Vec<String>, prefix: String) -> Resu
         #[cfg(debug_assertions)] {
             log::debug!("File {file} is marked for deletion because it exists in the filesystem, but is not in the database");
         }
-        let _ = tokio::fs::remove_file(file).await.map_err(|err| err.to_string())?;
+        tokio::fs::remove_file(file).await.map_err(|err| err.to_string())?;
         return Ok(true)
     }
 

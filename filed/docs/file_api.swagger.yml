@@ -111,6 +111,10 @@ paths:
                   type: string
                   example: binary file data
                   description: binary file data
+                instance_pass:
+                  type: string
+                  example: super_secret_pass
+                  description: Instance-specific password needed to upload files
                 metadata:
                   type: object
                   description: file info

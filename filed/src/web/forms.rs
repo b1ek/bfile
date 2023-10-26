@@ -249,9 +249,10 @@ pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>
 }
 
 pub fn get_routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
-    warp::post().and(
-        warp::multipart::form()
-            .and(warp::any().map(move || state.clone()))
-            .and_then(upload)
-    )
+    warp::post()
+        .and(warp::multipart::form())
+        .and(
+            warp::any().map(move || state.clone())
+        )
+        .and_then(upload)
 }

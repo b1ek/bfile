@@ -6,7 +6,7 @@
 use std::{collections::HashMap, net::IpAddr};
 
 use askama::Template;
-use warp::{Filter, reply::{Reply, json, with_status, html}, reject::Rejection, filters::multipart::FormData, http::StatusCode};
+use warp::{Filter, reply::{Reply, with_status, html}, reject::Rejection, filters::multipart::FormData, http::StatusCode};
 use futures_util::TryStreamExt;
 use bytes::BufMut;
 use serde::Serialize;
@@ -14,7 +14,7 @@ use warp_real_ip::real_ip;
 
 use crate::files::{File, lookup::LookupKind, DeleteMode};
 
-use super::{state::SharedState, pages::{BadActionReq, UploadSuccessPage, self, ErrorPage}, rejection::HttpReject};
+use super::{state::SharedState, pages::{UploadSuccessPage, ErrorPage}, rejection::HttpReject};
 
 #[derive(Debug, Serialize, Clone)]
 struct FormElement {
@@ -22,6 +22,8 @@ struct FormElement {
     mime: String
 }
 impl FormElement {
+    
+    #[allow(dead_code)]
     pub fn as_str_or_reject(self: &Self) -> Result<String, Rejection> {
         Ok(String::from_utf8(self.data.clone()).map_err(|err| warp::reject::custom(HttpReject::FromUtf8Error(err)))?)
     }

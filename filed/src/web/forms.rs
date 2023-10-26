@@ -3,13 +3,14 @@
  forms.rs - All the forms
 */
 
-use std::collections::HashMap;
+use std::{collections::HashMap, net::IpAddr};
 
 use askama::Template;
 use warp::{Filter, reply::{Reply, json, with_status, html}, reject::Rejection, filters::multipart::FormData, http::StatusCode};
 use futures_util::TryStreamExt;
 use bytes::BufMut;
 use serde::Serialize;
+use warp_real_ip::real_ip;
 
 use crate::files::{File, lookup::LookupKind, DeleteMode};
 
@@ -145,7 +146,7 @@ fn bad_req_html(data: String) -> Box<dyn Reply> {
     )
 }
 
-pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>, Rejection> {
+pub async fn upload(form: FormData, _ip: Option<IpAddr>, state: SharedState) -> Result<Box<dyn Reply>, Rejection> {
 
     if ! state.config.files.allow_uploads {
         return Ok(
@@ -251,6 +252,7 @@ pub async fn upload(form: FormData, state: SharedState) -> Result<Box<dyn Reply>
 pub fn get_routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
     warp::post()
         .and(warp::multipart::form())
+        .and(real_ip(vec![state.env.proxy_addr]))
         .and(
             warp::any().map(move || state.clone())
         )

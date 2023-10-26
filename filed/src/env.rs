@@ -45,6 +45,7 @@ pub fn loadenv() -> Result<Env, Box<dyn std::error::Error>> {
                 let env_var = get_var::<&str, String>("PROXY_IP")?;
 
                 let ip = env_var.parse::<IpAddr>();
+                let ret =
                 if let Ok(ip) = ip {
                     if ip == IpAddr::from([127, 0, 0, 1]) {
                         log::warn!("Proxy address is 127.0.0.1. No proxy will be trusted")
@@ -56,6 +57,13 @@ pub fn loadenv() -> Result<Env, Box<dyn std::error::Error>> {
                     }
                     ip
                 } else {
+                    let mut env_var = env_var;
+                    
+                    // add port if not added
+                    if env_var.split(":").collect::<Vec<&str>>().len() == 1 {
+                        env_var.push_str(":80");
+                    }
+
                     let sock = env_var.to_socket_addrs();
                     if let Err(err) = sock {
                         return Err(format!("Can't resolve {env_var}: {:?}", err).into());
@@ -64,8 +72,15 @@ pub fn loadenv() -> Result<Env, Box<dyn std::error::Error>> {
                     if addrs.len() == 0 {
                         return Err(format!("{env_var} resolved to nothing").into());
                     }
-                    addrs.next().unwrap().ip()
+                    let addr = addrs.next().unwrap().ip();
+                    addr
+                };
+                #[cfg(debug_assertions)] {
+                    if ret != IpAddr::from([ 127, 0, 0, 1 ]) {
+                        log::debug!("Proxy ip is {}", ret)
+                    }
                 }
+                ret
             },
             redis: Redis {
                 pass: get_var("REDIS_PASS")?,

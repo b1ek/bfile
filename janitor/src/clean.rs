@@ -42,17 +42,17 @@ async fn check_key(key: String, mut client: redis::Client) -> bool {
     false
 }
 
-pub async fn check_file(file: String, keys: Vec<String>, prefix: String) -> bool {
+pub async fn check_file(file: String, keys: Vec<String>, prefix: String) -> Result<bool, String> {
     if ! keys.iter().find(|x| x.chars().skip(prefix.len() + 4 + 2).collect::<String>() == file).is_none() {
         #[cfg(debug_assertions)] {
             log::debug!("File {file} is marked for deletion because it exists in the filesystem, but is not in the database");
         }
-        let _ = tokio::fs::remove_file(file).await;
-        return true
+        let _ = tokio::fs::remove_file(file).await.map_err(|err| err.to_string())?;
+        return Ok(true)
     }
 
 
-    false
+    Ok(false)
 }
 
 // check that all files in filesystem exist in the database
@@ -78,12 +78,11 @@ pub async fn fskeep(state: State) -> Result<(), Box<dyn Error>> {
 
     let mut redis = state.redis.clone();
     let keys: Vec<String> = redis.keys(format!("{}*", state.env.redis.prefix))?;
-    let objects = keys.len();
 
     #[cfg(debug_assertions)]
     log::debug!("Got {} DB objects", files.len());
 
-    let mut set: JoinSet<bool> = JoinSet::new();
+    let mut set: JoinSet<Result<bool, String>> = JoinSet::new();
 
     for file in files {
         set.spawn(check_file(file, keys.clone(), state.env.redis.prefix.clone()));
@@ -92,13 +91,26 @@ pub async fn fskeep(state: State) -> Result<(), Box<dyn Error>> {
     #[cfg(debug_assertions)]
     let mut del_count = 0_u32;
 
-    while let Some(_deleted) = set.join_next().await {
-        #[cfg(debug_assertions)] {
-            if _deleted.is_ok() {
-                if _deleted.unwrap() {
-                    del_count += 1;
+    let mut errors: Vec<String> = vec![];
+
+    while let Some(deleted) = set.join_next().await {
+        if let Ok(deleted) = deleted {
+            if let Ok(deleted) = deleted {
+                #[cfg(debug_assertions)]
+                if deleted {
+                    del_count += 1
                 }
             }
+            if let Err(err) = deleted {
+                errors.push(err);
+            }
+        }
+    }
+
+    if errors.len() != 0 {
+        log::error!("Got the following errors while deleting files:");
+        for error in errors.iter() {
+            log::error!("\t {}", error)
         }
     }
 

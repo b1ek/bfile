@@ -9,6 +9,31 @@
 
 {% endblock %}
 
+{% block scripts %}
+
+{%- if conf.files.upload_pass.is_some() -%}
+
+    {#- Script to disable button when password is not entered -#}
+{#- -#}<script>
+{#- -#}    (
+{#- -#}        ()=>{
+{#- -#}            const pass_inp=document.getElementById("instancepass");
+{#- -#}            const submit=document.getElementById("bfile-upload-submit");
+{#- -#}            submit.setAttribute('disabled',true);
+{#- -#}          
+{#- -#}            pass_inp.onchange=()=>{
+{#- -#}                if(pass_inp.value.length==0)
+{#- -#}                    submit.setAttribute('disabled',true);
+{#- -#}                else submit.removeAttribute('disabled')
+{#- -#}            }
+{#- -#}        }
+{#- -#}    )()
+{#- -#}</script>
+
+{%- endif -%}
+
+{% endblock %}
+
 {% block body %}
 
 <div style="max-width:95vw;width:fit-content;margin:0 auto">
@@ -114,6 +139,24 @@
                             </p>
                         </div>
                     {%- else -%}
+                        
+                        {%- if let Some(pass) = conf.files.upload_pass -%}
+                            <div class="alert blue">
+                                <h1 class="alert-title">
+                                    Upload password
+                                </h1>
+                                <div class="alert-text">
+                                    <p>This instance requires a password to upload a file.</p>
+                                    <p>
+                                        <label>
+                                            Password:
+                                            <input type="password" name="instancepass" id="instancepass">
+                                        </label>
+                                    </p>
+                                </div>
+                            </div>
+                        {%- endif -%}
+
                         <p>
                             <input type="file" name="file" id="bfile-formupload-file" style="display: none" />
                             <label for="bfile-formupload-file">
@@ -142,7 +185,7 @@
                             </label>
                         </p>
                         <p>
-                            <button class='btn btn-fill'>
+                            <button class='btn btn-fill' id="bfile-upload-submit">
                                 Upload!
                             </button>
                         </p>

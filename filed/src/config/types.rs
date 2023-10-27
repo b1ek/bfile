@@ -22,6 +22,10 @@ pub struct FilesPolicy {
     #[serde(default)]
     pub upload_disable_reason: Option<String>,
 
+    /// Upload password
+    #[serde(default)]
+    pub upload_pass: Option<String>,
+
     /// Default time for file to be deleted
     #[serde(default)]
     pub file_del_timeout: usize,
@@ -42,6 +46,7 @@ impl Default for FilesPolicy {
             allow_custom_names: true,
             allow_pass_protection: true,
             upload_disable_reason: None,
+            upload_pass: None,
             file_del_timeout: 1800,
             type_whitelist: None,
             type_blacklist: None,

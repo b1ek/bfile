@@ -61,6 +61,7 @@ impl FormElement {
 struct UploadFormData {
     filename: Option<String>,
     password: Option<String>,
+    instancepass: Option<String>,
     lookup_kind: LookupKind,
     delmode: DeleteMode,
     file: Vec<u8>,
@@ -73,6 +74,7 @@ impl Default for UploadFormData {
         UploadFormData {
             filename: None,
             password: None,
+            instancepass: None,
             lookup_kind: LookupKind::ByHash,
             delmode: DeleteMode::Time,
             file: vec![],
@@ -126,6 +128,16 @@ impl UploadFormData {
                 return None
             }
         }
+
+        match data.get("instancepass") {
+            Some(val) => {
+                let val = val.data.clone();
+                if let Ok(pass) = String::from_utf8(val) {
+                    out.instancepass = Some(pass);
+                }
+            },
+            None => ()
+        };
 
         let file = data.get("file")?;
         out.file = file.data.clone();
@@ -199,6 +211,47 @@ pub async fn upload(form: FormData, ip: Option<IpAddr>, state: SharedState) -> R
                         .map_err(|x| HttpReject::AskamaError(x))?
                 )
             )
+        }
+
+        if let Some(upload_pass) = state.config.files.upload_pass.clone() {
+
+            if let Some(pass) = formdata.instancepass {
+                if upload_pass != pass {
+                    let error = ErrorPage {
+                        env: state.env.clone(),
+                        conf: state.config.clone(),
+                        error_text: "Password is invalid".into(),
+                        link: Some("/".into()),
+                        link_text: Some("Go back".into())
+                    };
+
+                    return Ok(
+                        Box::new(
+                            html(
+                                error.render()
+                                    .map_err(|x| HttpReject::AskamaError(x))?
+                            )
+                        )
+                    )
+                }
+            } else {
+                let error = ErrorPage {
+                    env: state.env.clone(),
+                    conf: state.config.clone(),
+                    error_text: "Password is not available".into(),
+                    link: Some("/".into()),
+                    link_text: Some("Go back".into())
+                };
+
+                return Ok(
+                    Box::new(
+                        html(
+                            error.render()
+                                .map_err(|x| HttpReject::AskamaError(x))?
+                        )
+                    )
+                )
+            }
         }
 
         let file = File::create(

@@ -21,3 +21,7 @@
 .alert.danger .alert-title {
     background: #602020;
 }
+
+.alert.blue .alert-title {
+    background: #203050;
+}

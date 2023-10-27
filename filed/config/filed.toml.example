@@ -21,6 +21,11 @@ allow_pass_protection=true
 # This is shown only if allow_uploads = false
 # upload_disable_reason="File uploads were disabled because of an ongoing attack."
 
+# If you want to restrict the uploads
+# To only the people who have a password,
+# uncomment this field
+# upload_pass=super_secret_pass
+
 # Timeout for deleting a user uploaded file
 file_del_timeout=1800
 

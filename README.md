@@ -9,6 +9,21 @@ blek! File is a free service that would help you with file sharing.
 
 The principle is very simple: you upload a file, then download it from another device. The file will be deleted after 1 download or 30 minutes.
 
+## Public instances
+List of official instances
+
+| Name | Administrator | URL |
+| --- | --- | --- |
+| 🌠 blek! File | b1ek &lt;me@blek.codes&gt; | [https://file.blek.codes](file.blek.codes) |
+
+To add your instance in this list, fork and open a PR.
+
+To qualify, your instance must be having:  
+1. Uploads without a password turned on
+2. Have proper ToS
+3. Come up with a unique name
+4. Have a public administrator email
+
 ## Licensing
 This software is released under GPL3 license, a copyleft license that protects users' freedom by ensuring that all future copies of this software are open source as well.
 

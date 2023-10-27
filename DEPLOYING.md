@@ -13,6 +13,17 @@ To deploy a basic instance for general public use, follow these simple steps:
 6. Create and start containers with `docker-compose up -d`
 7. Route your top level reverse proxy to the `caddy` service or to the port that you opened via the docker compose file.
 
+## More extensive configuration
+Well, generally, time-wise, it is not really a good idea to create a custom services configuration.
+However, I will guide you through the basic minimal configuration.
+
+Basically, the most minimal blek!File is a fileD service connected to a redis database. 
+I think that if you are clinically insance, you can set these up as a systemd services or a `screen`ed program.
+
+However, its not really recommended to run this without janitorD as unused files will just clog up your filesystem. 
+The two requirements for janitorD are to have access to the fileD's usercontent directory and the Redis database. 
+The default docker configuration mounts `/opt/user_content` to the same volume for both fileD and janitorD.
+
 ## FileD configuration
 Unless you are running in some kind of super customized docker compose environment, just copying the `.env.example` to `.env` should be enough to get it to run.
 

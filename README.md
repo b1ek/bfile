@@ -1,10 +1,3 @@
-| ⚠️ This is in a rather early stage of development and shouldn't be deployed |
-| --------------------------------------------------------------------------- |
-
-Even though this project is mature enough to be deployed in a public instance,
-this is highly discouraged.  
-However, if you do this, be prepared for [DOS](https://en.wikipedia.org/wiki/Denial-of-service_attack) issues and API changes.
-<br/>
 
 <h1 align='center'>
     <img src="./filed/static/android-chrome-192x192.png"/>

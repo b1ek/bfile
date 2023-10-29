@@ -22,6 +22,11 @@ fn system(cmd: &str, args: &[&str]) -> String {
         .args(args)
         .output()
         .unwrap();
+
+    if out.stderr.len() != 0 {
+        panic!("Got this while running {cmd} with \"{}\": {}", args.join(" "), String::from_utf8(out.stderr).unwrap())
+    }
+
     String::from_utf8(out.stdout).unwrap()
 }
 

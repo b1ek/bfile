@@ -17,12 +17,15 @@ pub struct Redis {
 
 #[derive(Debug, Clone)]
 pub struct VersionData {
-    pub commit: String
+    pub commit: String,
+    pub branch: String
 }
+
 impl Default for VersionData {
     fn default() -> Self {
         VersionData {
-            commit: env!("COMMIT_HASH").to_string()
+            commit: env!("COMMIT_HASH").to_string(),
+            branch: env!("COMMIT_BRANCH").to_string()
         }
     }
 }

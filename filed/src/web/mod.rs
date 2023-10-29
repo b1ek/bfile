@@ -2,8 +2,6 @@
  web - The part of filed that handles everything related to HTTP
  */
 
-use std::env::current_dir;
-
 use static_dir::static_dir;
 use warp::{Filter, reply::Reply, reject::Rejection};
 
@@ -19,15 +17,11 @@ mod uploaded;
 use state::SharedState;
 
 pub fn routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
-    let staticpath = current_dir().unwrap();
-    let staticpath = staticpath.to_str().unwrap().to_string() + "/static";
-
-    pages::get_routes(state.clone())
+    static_dir!("static")
+        .or(pages::get_routes(state.clone()))
         .or(forms::get_routes(state.clone()))
         .or(api::get_routes(state.clone()))
         .or(uploaded::get_uploaded(state))
-        .or(static_dir!("static"))
-        .or(warp::fs::dir(staticpath.to_string()))
 }
 
 /*

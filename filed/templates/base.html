@@ -66,6 +66,13 @@
                         <tr>
                             <td>
                                 <small>Made with Rust and &lt;3</small>
+                                
+                                <small style="display:block">
+                                    Version
+                                    <a href="https://git.blek.codes/blek/bfile/commit/{{ env.version.commit }}" target="_blank">
+                                        {{ env!("CARGO_PKG_VERSION") }} ({{ env.version.branch -}}/{{- env.version.short_commit }})
+                                    </a>
+                                </small>
                     
                                 <ul style='margin:10px 0'>
                                     <li>

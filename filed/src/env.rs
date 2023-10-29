@@ -18,6 +18,7 @@ pub struct Redis {
 #[derive(Debug, Clone)]
 pub struct VersionData {
     pub commit: String,
+    pub short_commit: String,
     pub branch: String
 }
 
@@ -25,6 +26,7 @@ impl Default for VersionData {
     fn default() -> Self {
         VersionData {
             commit: env!("COMMIT_HASH").to_string(),
+            short_commit: env!("COMMIT_HASH").to_string().chars().take(6).collect(),
             branch: env!("COMMIT_BRANCH").to_string()
         }
     }

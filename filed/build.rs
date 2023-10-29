@@ -58,5 +58,13 @@ fn main() {
             .arg(asset_path(asset))
             .spawn()
             .unwrap();
-    })
+    });
+
+    let commit = Command::new("git")
+        .args(&["rev-parse", "HEAD"])
+        .output()
+        .unwrap();
+    
+    let commit = String::from_utf8(commit.stdout).unwrap();
+    println!("cargo:rustc-env=COMMIT_HASH={commit}");
 }

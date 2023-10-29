@@ -16,6 +16,18 @@ pub struct Redis {
 }
 
 #[derive(Debug, Clone)]
+pub struct VersionData {
+    pub commit: String
+}
+impl Default for VersionData {
+    fn default() -> Self {
+        VersionData {
+            commit: env!("COMMIT_HASH").to_string()
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
 pub struct Env {
     pub logging: bool,
     pub listen: SocketAddr,
@@ -24,7 +36,8 @@ pub struct Env {
     pub filedir: String,
     pub instanceurl: String,
     pub uploadspath: String,
-    pub confpath: String
+    pub confpath: String,
+    pub version: VersionData
 }
 
 fn get_var<T: Into<String>, O: From<String>>(name: T) -> Result<O, String> {
@@ -140,7 +153,8 @@ pub fn loadenv() -> Result<Env, Box<dyn std::error::Error>> {
                     return Err(format!("CONF_FILE is {}, which is not a file!", spath).into())
                 }
                 spath
-            }
+            },
+            version: VersionData::default()
         }
     )
 }

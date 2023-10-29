@@ -17,6 +17,14 @@ fn extfilter(valid: String, x: Option<&OsStr>) -> bool {
     ext == valid
 }
 
+fn system(cmd: &str, args: &[&str]) -> String {
+    let out = Command::new(cmd)
+        .args(args)
+        .output()
+        .unwrap();
+    String::from_utf8(out.stdout).unwrap()
+}
+
 fn main() {
 
     println!("cargo:rerun-if-changed=static/assets");
@@ -60,11 +68,7 @@ fn main() {
             .unwrap();
     });
 
-    let commit = Command::new("git")
-        .args(&["rev-parse", "HEAD"])
-        .output()
-        .unwrap();
+    let commit = system("git", &["rev-parse", "HEAD"]);
     
-    let commit = String::from_utf8(commit.stdout).unwrap();
     println!("cargo:rustc-env=COMMIT_HASH={commit}");
 }

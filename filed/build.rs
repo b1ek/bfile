@@ -74,7 +74,7 @@ fn main() {
     });
 
     let commit = system("git", &["rev-parse", "HEAD"]);
-    let branch = system("git", &["rev-parse", "--abbrev-rev", "HEAD"]);
+    let branch = system("git", &["rev-parse", "--abbrev-ref", "HEAD"]);
 
     println!("cargo:rustc-env=COMMIT_HASH={commit}");
     println!("cargo:rustc-env=COMMIT_BRANCH={branch}");

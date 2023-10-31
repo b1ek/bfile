@@ -1,5 +1,5 @@
 
-use std::{fs, path::PathBuf, ffi::OsStr, process::Command};
+use std::{fs, path::PathBuf, ffi::OsStr, process::Command, error::Error};
 
 use css_minify::optimizations::{Minifier, Level};
 
@@ -17,17 +17,17 @@ fn extfilter(valid: String, x: Option<&OsStr>) -> bool {
     ext == valid
 }
 
-fn system(cmd: &str, args: &[&str]) -> String {
+fn system(cmd: &str, args: &[&str]) -> Result<String, Box<dyn Error>> {
     let out = Command::new(cmd)
         .args(args)
         .output()
-        .unwrap();
+        ?;
 
     if out.stderr.len() != 0 {
         panic!("Got this while running {cmd} with \"{}\": {}", args.join(" "), String::from_utf8(out.stderr).unwrap())
     }
 
-    String::from_utf8(out.stdout).unwrap()
+    Ok(String::from_utf8(out.stdout)?)
 }
 
 fn main() {
@@ -65,17 +65,24 @@ fn main() {
 
     scripts.iter().for_each(|asset| {
         Command::new("uglifyjs")
-            .arg("-c")
             .arg(asset)
             .arg("-o")
             .arg(asset_path(asset))
+            .arg("-c")
             .spawn()
             .unwrap();
     });
 
-    let commit = system("git", &["rev-parse", "HEAD"]);
-    let branch = system("git", &["rev-parse", "--abbrev-ref", "HEAD"]);
+    let commit = system("git", &["rev-parse", "HEAD"]).map_err(|x| x.to_string());
+    let branch = system("git", &["rev-parse", "--abbrev-ref", "HEAD"]).map_err(|x| x.to_string());
 
-    println!("cargo:rustc-env=COMMIT_HASH={commit}");
-    println!("cargo:rustc-env=COMMIT_BRANCH={branch}");
+    match commit {
+        Err(err) => panic!("Can't get commit: {}", err),
+        Ok(commit) => println!("cargo:rustc-env=COMMIT_HASH={commit}")
+    }
+
+    match branch {
+        Err(err) => panic!("Can't get commit: {}", err),
+        Ok(branch) => println!("cargo:rustc-env=COMMIT_BRANCH={branch}")
+    }
 }

@@ -10,7 +10,7 @@ RUN cargo b -r
 RUN strip target/release/janitor && upx --best target/release/janitor
 
 # --- deploy ---
-FROM busybox:musl
+FROM alpipne:3.17
 
 RUN mkdir /config
 WORKDIR /config

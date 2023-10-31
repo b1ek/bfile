@@ -2,8 +2,8 @@ version: '3.7'
 services:
     filed:
         build:
-            context: filed
-            dockerfile: Dockerfile.prod
+            context: .
+            dockerfile: filed/Dockerfile.prod
         networks:
             bfile:
         volumes:

@@ -2,7 +2,8 @@
 FROM rust:alpine as builder
 
 WORKDIR /opt/build
-COPY . .
+COPY filed .
+COPY ./.git ./.git
 
 RUN apk add --no-cache musl-dev upx nodejs yarn && \
     yarn global add uglify-js

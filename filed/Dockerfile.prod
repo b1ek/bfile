@@ -5,14 +5,14 @@ WORKDIR /opt/build
 COPY filed .
 COPY ./.git ./.git
 
-RUN apk add --no-cache musl-dev upx nodejs yarn && \
-    yarn global add uglify-js
+RUN apk add --no-cache git musl-dev upx nodejs yarn && \
+    yarn global add uglify-js@3.17.4
 
 RUN cargo b -r
 RUN strip target/release/filed && upx --best target/release/filed
 
 # --- deploy ---
-FROM busybox:musl
+FROM alpine:3.17
 
 RUN mkdir /config
 WORKDIR /config

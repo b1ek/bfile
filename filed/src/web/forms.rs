@@ -17,7 +17,7 @@ use crate::files::{File, lookup::LookupKind, DeleteMode};
 use super::{state::SharedState, pages::{UploadSuccessPage, ErrorPage}, rejection::HttpReject};
 
 #[derive(Debug, Serialize, Clone)]
-struct FormElement {
+pub struct FormElement {
     data: Vec<u8>,
     mime: String
 }
@@ -58,15 +58,15 @@ impl FormElement {
     }
 }
 
-struct UploadFormData {
-    filename: Option<String>,
-    password: Option<String>,
-    instancepass: Option<String>,
-    lookup_kind: LookupKind,
-    delmode: DeleteMode,
-    file: Vec<u8>,
-    mime: String,
-    tos_consent: bool
+pub struct UploadFormData {
+    pub filename: Option<String>,
+    pub password: Option<String>,
+    pub instancepass: Option<String>,
+    pub lookup_kind: LookupKind,
+    pub delmode: DeleteMode,
+    pub file: Vec<u8>,
+    pub mime: String,
+    pub tos_consent: bool
 }
 
 impl Default for UploadFormData {
@@ -86,7 +86,7 @@ impl Default for UploadFormData {
 
 impl UploadFormData {
 
-    pub fn from_formdata(data: HashMap<String, FormElement>) -> Option<UploadFormData> {
+    pub fn from_formdata(data: HashMap<String, FormElement>, use_defaults: bool) -> Option<UploadFormData> {
         let mut out = Self::default();
         
         // Add a name
@@ -125,7 +125,9 @@ impl UploadFormData {
                 }
             },
             None => {
-                return None
+                if ! use_defaults {
+                    return None
+                }
             }
         }
 
@@ -169,7 +171,7 @@ pub async fn upload(form: FormData, ip: Option<IpAddr>, state: SharedState) -> R
     }
 
     let params: HashMap<String, FormElement> = FormElement::from_formdata(form).await.map_err(|x| HttpReject::WarpError(x))?;
-    let formdata = UploadFormData::from_formdata(params.clone());
+    let formdata = UploadFormData::from_formdata(params.clone(), false);
 
     if let Some(formdata) = formdata {
 

@@ -8,16 +8,18 @@ use warp::{Filter, reply::Reply, reject::Rejection};
 use crate::{env::Env, files::lookup::FileManager, config::types::Config};
 
 mod pages;
-mod forms;
+pub mod forms;
 pub mod state;
 mod rejection;
 mod api;
 mod uploaded;
+mod curlapi;
 
 use state::SharedState;
 
 pub fn routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
     static_dir!("static")
+        .or(curlapi::get_routes(state.clone()))
         .or(pages::get_routes(state.clone()))
         .or(forms::get_routes(state.clone()))
         .or(api::get_routes(state.clone()))

@@ -3,11 +3,21 @@
     padding: 1em;
     border: 1px solid var(--header-sec-color);
     border-radius: 12px;
-    font-family: monospace;
+    overflow-x: auto;
+}
+.code .inner {
+    width: max-content;
+    display: block;
 }
 .code-inline {
     display: inline;
-    font-family: monospace;
     background: #00000010;
+    border: 1px solid #c2c4c210;
+    border-radius: 4px;
     padding: 2px 4px;
+}
+
+.code, .code-inline {
+    font-family: monospace;
+    line-height: 1.5em;
 }

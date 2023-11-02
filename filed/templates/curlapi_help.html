@@ -25,11 +25,13 @@
         </a>
     </p>
     <div class='code'>
-        <span style='color:green'>curl</span>
-        <span style='color:orange'>-X POST</span>
-        <span style='color:darkcyan'>{{env.instanceurl}}/curlapi/upload</span>
-        <span style='color:orange'>-F'file=@file.txt'</span>
-        <span style='color:orange'>-F'tos_consent=on'</span>
+        <span class='inner'>
+            <span style='color:green'>curl</span>
+            <span style='color:orange'>-X POST</span>
+            <span style='color:darkcyan'>{{env.instanceurl}}/curlapi/upload</span>
+            <span style='color:orange'>-F'file=@file.txt'</span>
+            <span style='color:orange'>-F'tos_consent=on'</span>
+        </span>
     </div>
     <p>
         To add a password, do it like this:
@@ -38,12 +40,14 @@
         </a>
     </p>
     <div class='code'>
-        <span style='color:green'>curl</span>
-        <span style='color:orange'>-X POST</span>
-        <span style='color:darkcyan'>{{env.instanceurl}}/curlapi/upload</span>
-        <span style='color:orange'>-F'file=@file.txt'</span>
-        <span style='color:orange'>-F'tos_consent=on'</span>
-        <span style='color:orange'>-F'named=on'</span>
+        <span class='inner'>
+            <span style='color:green'>curl</span>
+            <span style='color:orange'>-X POST</span>
+            <span style='color:darkcyan'>{{env.instanceurl}}/curlapi/upload</span>
+            <span style='color:orange'>-F'file=@file.txt'</span>
+            <span style='color:orange'>-F'tos_consent=on'</span>
+            <span style='color:orange'>-F'named=on'</span>
+        </span>
     </div>
     <p>
         Note that the

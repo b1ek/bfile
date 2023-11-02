@@ -24,6 +24,22 @@ pub async fn upload(form: FormData, ip: Option<IpAddr>, state: SharedState) -> R
         .await
         .map_err(|x| HttpReject::WarpError(x))?;
 
+    if let Some(consent) = params.get("tos_consent") {
+        if consent.data != "on".bytes().collect::<Vec<u8>>() {
+            return Ok(
+                Box::new(
+                    format!("You need to agree to the ToS to upload a file.\nSee {}/curlapi/help for details\n\nTo agree to the ToS, add a -F'tos_consent=on'\n", state.env.instanceurl)
+                )
+            )
+        }
+    } else {
+        return Ok(
+            Box::new(
+                format!("You need to agree to the ToS to upload a file.\nSee {}/curlapi/help for details\n\nTo agree to the ToS, add a -F'tos_consent=on'\n", state.env.instanceurl)
+            )
+        )
+    }
+
     let formdata = UploadFormData::from_formdata(params, true);
     if let Some(formdata) = formdata {
 

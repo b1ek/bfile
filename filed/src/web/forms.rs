@@ -18,8 +18,8 @@ use super::{state::SharedState, pages::{UploadSuccessPage, ErrorPage}, rejection
 
 #[derive(Debug, Serialize, Clone)]
 pub struct FormElement {
-    data: Vec<u8>,
-    mime: String
+    pub data: Vec<u8>,
+    pub mime: String
 }
 impl FormElement {
     

@@ -1,0 +1,13 @@
+.code {
+    display: block;
+    padding: 1em;
+    border: 1px solid var(--header-sec-color);
+    border-radius: 12px;
+    font-family: monospace;
+}
+.code-inline {
+    display: inline;
+    font-family: monospace;
+    background: #00000010;
+    padding: 2px 4px;
+}

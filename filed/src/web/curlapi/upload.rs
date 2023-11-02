@@ -111,7 +111,7 @@ pub async fn upload(form: FormData, ip: Option<IpAddr>, state: SharedState) -> R
 }
 
 pub fn get_routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
-    warp::any()
+    warp::post()
         .and(warp::path!("curlapi" / "upload"))
         .and(warp::multipart::form())
         .and(real_ip(vec![state.env.proxy_addr]))

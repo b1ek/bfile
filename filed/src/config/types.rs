@@ -112,6 +112,10 @@ pub struct APISettings {
     /// Whether /api/upload is enabled
     #[serde(default)]
     pub upload: bool,
+
+    /// Whether curlapi is enabled
+    #[serde(default)]
+    pub curlapi: bool
 }
 
 impl Default for APISettings {
@@ -123,7 +127,8 @@ impl Default for APISettings {
             get_all_own_only: true,
             delete: false,
             sudo_delete: false,
-            upload: false
+            upload: false,
+            curlapi: true
         }
     }
 }

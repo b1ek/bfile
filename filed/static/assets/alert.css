@@ -25,3 +25,6 @@
 .alert.blue .alert-title {
     background: #203050;
 }
+.alert.green .alert-title {
+    background: #205030;
+}

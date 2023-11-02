@@ -25,7 +25,11 @@
         </a>
     </p>
     <div class='code'>
-        curl -X POST {{env.instanceurl}}/curlapi/upload -F'file=@file.txt' -F'tos_consent=on'
+        <span style='color:green'>curl</span>
+        <span style='color:orange'>-X POST</span>
+        <span style='color:darkcyan'>{{env.instanceurl}}/curlapi/upload</span>
+        <span style='color:orange'>-F'file=@file.txt'</span>
+        <span style='color:orange'>-F'tos_consent=on'</span>
     </div>
     <p>
         To add a password, do it like this:
@@ -34,7 +38,12 @@
         </a>
     </p>
     <div class='code'>
-        curl -X POST {{env.instanceurl}}/curlapi/upload -F'file=@file.txt' -F'filename=uwu' -F'tos_consent=on' -F'named=on'
+        <span style='color:green'>curl</span>
+        <span style='color:orange'>-X POST</span>
+        <span style='color:darkcyan'>{{env.instanceurl}}/curlapi/upload</span>
+        <span style='color:orange'>-F'file=@file.txt'</span>
+        <span style='color:orange'>-F'tos_consent=on'</span>
+        <span style='color:orange'>-F'named=on'</span>
     </div>
     <p>
         Note that the
@@ -45,7 +54,7 @@
         HTML form.
     </p>
     
-    <div class="alert danger">
+    <div class="alert green">
         <h1 class="alert-title">
             Important
         </h1>

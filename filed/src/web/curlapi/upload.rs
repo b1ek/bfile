@@ -47,7 +47,7 @@ pub async fn upload(form: FormData, ip: Option<IpAddr>, state: SharedState) -> R
         }
 
         if let Some(pass) = state.config.files.upload_pass {
-            let mut pass_valid = false;
+            let pass_valid: bool;
             if let Some(upass) = formdata.instancepass {
                 pass_valid = upass == pass;
             } else {
@@ -85,7 +85,7 @@ pub async fn upload(form: FormData, ip: Option<IpAddr>, state: SharedState) -> R
                         "File uploaded successfully.\n",
                         "It is available via this link:\n\n",
 
-                        "{}/upload/{}"
+                        "{}/upload/{}\n"
                     ),
                     state.env.instanceurl,
                     urlencoding::encode(

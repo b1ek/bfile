@@ -1,0 +1,101 @@
+
+{% extends "base.html" %}
+
+{% block head %}
+<link rel='stylesheet' href="/code.css" />
+<link rel='stylesheet' href="/alert.css" />
+<link rel='stylesheet' href="/js-only.css" />
+<style>
+.copy-btn { font-size: 70%; transform: translateY(-25%); display: inline-block }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div style="max-width:95vw;width:fit-content;margin:0 auto">
+    <h1 style="text-align:center">Curl API</h1>
+    <p>
+        blek! File has an API for uploading files via cURL.
+        To upload a file via cURL, follow these instructions:
+    </p>
+    <p>
+        To upload a file, POST it like this:
+        <a href="#" class="copy-btn" data-clipboard-text="curl -X POST {{env.instanceurl}}/curlapi/upload -F'file=@file.txt' -F'tos_consent=on'">
+            Copy!
+        </a>
+    </p>
+    <div class='code'>
+        curl -X POST {{env.instanceurl}}/curlapi/upload -F'file=@file.txt' -F'tos_consent=on'
+    </div>
+    <p>
+        To add a password, do it like this:
+        <a href="#" class="copy-btn" data-clipboard-text="curl -X POST {{env.instanceurl}}/curlapi/upload -F'file=@file.txt' -F'filename=uwu' -F'tos_consent=on' -F'named=on'">
+            Copy!
+        </a>
+    </p>
+    <div class='code'>
+        curl -X POST {{env.instanceurl}}/curlapi/upload -F'file=@file.txt' -F'filename=uwu' -F'tos_consent=on' -F'named=on'
+    </div>
+    <p>
+        Note that the
+        <span class='code-inline'>named=on</span>
+        switch is required.
+        Its needed because the curl API is basically a wrapper of
+        <a href="/">this</a>
+        HTML form.
+    </p>
+    
+    <div class="alert danger">
+        <h1 class="alert-title">
+            Important
+        </h1>
+        <p class="alert-text">
+            Read the
+            <a href="/tos">Terms of Service</a>
+            <b>before</b>
+            uploading a file.
+            <br/>
+            You agree to them by adding the
+            <span class="code-inline">tos_consent=on</span>
+            switch.
+        </p>
+    </div>
+
+    <div class='alert blue'>
+        <h1 class='alert-title'>Web UI</h1>
+        <div class='alert-text'>
+            <p>
+                Hey, it looks like you are viewing this page from a browser!<br/>
+                You can use the Web UI as well to upload a file!
+            </p>
+            <p style='margin:32px 0'>
+                <a href='/' role='button' class='btn'>
+                    Go to the web UI
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://unpkg.com/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+    new ClipboardJS('.copy-btn');
+{#- -#}
+    ( {#- -#}
+        () => { {#- -#}
+            let btns = document.getElementsByClassName('copy-btn') {#- -#}
+            for (const button of btns) { {#- -#}
+                button.onclick = () => { {#- -#}
+                    let old = button.innerHTML; {#- -#}
+                    button.innerHTML = 'Copied!'; {#- -#}
+                    setTimeout(() => { button.innerHTML = old }, 500); {#- -#}
+                } {#- -#}
+            } {#- -#}
+        } {#- -#}
+    )() {#- -#}
+</script>
+<script src='/js-only.js'></script>
+{% endblock %}

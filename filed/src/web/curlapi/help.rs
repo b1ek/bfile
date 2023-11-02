@@ -1,8 +1,18 @@
-use warp::{Filter, reply::Reply, reject::Rejection};
+use askama::Template;
+use warp::{Filter, reply::{Reply, html}, reject::Rejection};
 
-use crate::web::state::SharedState;
+use crate::web::{state::SharedState, pages::CurlHelpPage, rejection::HttpReject};
 
-pub async fn help(state: SharedState) -> Result<String, Rejection> {
+pub async fn help(state: SharedState, ua: String) -> Result<Box<dyn Reply>, Rejection> {
+
+    if ! ua.starts_with("curl/") {
+        let page = CurlHelpPage { conf: state.config.clone(), env: state.env.clone() };
+        return Ok(
+            Box::new(
+                html(page.render().map_err(|x| HttpReject::AskamaError(x))?)
+            )
+        )
+    }
 
     let brand = format!(
         "{} \x1b[1m{}\x1b[0m  {}",
@@ -45,19 +55,20 @@ the HTML used at the regular web UI form wrapped into this URL
 \x1b[1;32mIMPORTANT:\x1b[0m Read the terms of service \x1b[1mbefore\x1b[0m uploading the file!
 The ToS can be found here: \x1b[34m{instance}/tos\x1b[0m .
 
-{warns}
-"
+{warns}"
 );
 
-    Ok(format!("
+    Ok(
+    Box::new(
+format!("
   \x1b[31m┓ ╻\x1b[0m \x1b[35m┏┓•┓  \x1b[0m
   \x1b[32m┣┓┃\x1b[0m \x1b[95m┣ ┓┃┏┓\x1b[0m
   \x1b[34m┗┛•\x1b[0m \x1b[35m┻ ┗┗┗━\x1b[0m
 
 {brand}
-
 {help}
-").into())
+").to_string())
+)   
 }
 
 pub fn get_routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
@@ -66,6 +77,9 @@ pub fn get_routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error
         .and(
             warp::any()
                 .map(move || state.clone())
+        )
+        .and(
+            warp::header::<String>("user-agent")
         )
         .and_then(help)
 }

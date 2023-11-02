@@ -88,6 +88,14 @@ pub struct ErrorPage {
     pub link_text: Option<String>
 }
 
+#[derive(Template)]
+#[template( path = "curlapi_help.html" )]
+#[allow(dead_code)]
+pub struct CurlHelpPage {
+    pub env: Env,
+    pub conf: Config
+}
+
 pub async fn uploaded(query: HashMap<String, String>, state: SharedState) -> Result<Html<String>, Rejection> {
 
     if ! query.contains_key("file") {

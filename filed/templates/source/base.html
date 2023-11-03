@@ -16,6 +16,21 @@
         <title>{{ conf.brand.instance_name }}</title>
 
         <style> .footer svg { height: 32px; margin: 10px 0 } </style>
+        <style>
+        @media (max-width:667px) {
+
+            .header-text { text-align: center }
+            .header-home { width: 100% }
+            .header-bg   { left: 50% !important; transform: translateX(-50%); -webkit-mask-image: linear-gradient(90deg, #0000, #000, #0000); }
+
+            {%- if conf.brand.instance_motto.len() != 0 -%}
+                .header-home-motto {
+                    display:none
+                }
+            {%- endif -%}
+
+        }
+        </style>
 
         {%- if cfg!(debug_assertions) -%}
             <link rel="stylesheet" href="/alert.css" />
@@ -33,7 +48,7 @@
                     {{- conf.brand.instance_name -}}
                     {%- if conf.brand.instance_motto.len() != 0 -%}
                         {#- Whitespace control is stupid -#}
-                        {{- " - " -}}{{- conf.brand.instance_motto -}}
+                        <span class="header-home-motto">{{- " - " -}}{{- conf.brand.instance_motto -}}</span>
                     {%- endif -%}
                 </a>
             </div>

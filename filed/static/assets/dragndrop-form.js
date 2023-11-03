@@ -8,8 +8,24 @@
         const root_drag_rop = document.getElementsByClassName('file-drag-n-drop')[0];
 
         // make the root drag&drop element an ideal circle
-        root_drag_rop.style.width   = root_drag_rop.offsetWidth + 'px';
-        root_drag_rop.style.height  = root_drag_rop.offsetWidth + 'px';
+
+        function updateDragNDrop() {
+            
+            if (document.body.scrollWidth < 667) {
+                // mobile
+                delete root_drag_rop.style.width;
+                delete root_drag_rop.style.height;
+                return
+            }
+
+            const width = root_drag_rop.offsetWidth;
+
+            root_drag_rop.style.width   = width + 'px';
+            root_drag_rop.style.height  = width + 'px';
+        }
+
+        updateDragNDrop();
+        document.onresize = updateDragNDrop();
 
         /** @type {HTMLElement} */
         const drag_rop = document.getElementsByClassName('file-drag-n-drop-inside')[0];

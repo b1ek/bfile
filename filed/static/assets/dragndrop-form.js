@@ -6,6 +6,11 @@
 
         /** @type {HTMLElement} */
         const root_drag_rop = document.getElementsByClassName('file-drag-n-drop')[0];
+
+        // make the root drag&drop element an ideal circle
+        root_drag_rop.style.width   = root_drag_rop.offsetWidth + 'px';
+        root_drag_rop.style.height  = root_drag_rop.offsetWidth + 'px';
+
         /** @type {HTMLElement} */
         const drag_rop = document.getElementsByClassName('file-drag-n-drop-inside')[0];
         const dr_rop_t = document.getElementsByClassName('file-drag-n-drop-inside-text')[0];

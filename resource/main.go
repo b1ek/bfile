@@ -95,6 +95,10 @@ func main() {
 		AppName:		"blek! File resourceD",
 	})
 
+	app.Get("/info/is_enabled", func (c *fiber.Ctx) error {
+		return c.JSON(conf.ResourceD.Enabled)
+	})
+
 	app.Use(func (c *fiber.Ctx) error {
 		if ! conf.ResourceD.Enabled {
 			return c.Status(fiber.StatusNotFound).SendString("ResourceD is disabled")

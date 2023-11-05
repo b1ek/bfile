@@ -1,15 +1,15 @@
 
 # The resourceD config
-[ResourceD]
+[resourceD]
 
 # Whether to enable the resourceD.
 # If this is false, resourceD will start but respond to
 # all requests with 404
 # It is false by default because resourceD is not required in a default installation.
-Enabled=true
+enabled=true
 
 # URL to listen on
-ListenUrl="0.0.0.0:80"
+listen_url="0.0.0.0:80"
 
 # Minibal size of a file to be cached
 # File size is parsed via this library:
@@ -24,11 +24,12 @@ proxy_cache_min_size="5MB"
 # dev.indie_guy.logo
 # com.pany.logo
 # Test your names here: https://regex101.com/r/wQdOup/2
-[Resource."com.example.logo"]
+[resource."com.example.logo"]
+
 # Can also be an external link
 # If an external link is specified,
 # the resource will be returned as a 302 redirect to the link
-Url="file:///some/where"
+url="file:///some/where"
 
 # File type, as according to this:
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types

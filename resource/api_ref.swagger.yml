@@ -1,0 +1,48 @@
+openapi: 3.0.3
+info:
+  title: ResourceD API
+  description: |-
+    This is the ResourceD API docs.
+  license:
+    name: GPLv3
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+  version: "1.0"
+servers:
+  - url: http://localhost/resource
+tags:
+  - name: Data API
+    description: API for serving data
+  - name: System API
+    description: API for serving system data
+
+paths:
+  /{id}:
+    get:
+      description: Get a resource
+      summary: Get a resource. Send browser requests to this URL
+      tags:
+        - Data API
+      responses:
+        200:
+          description: Returns a resource in its binary data
+        302:
+          description: Resource is an external (http) link and the redirect is being forwarded to that link
+        404:
+          description: Not found
+        500:
+          description: Internal error
+  /info/is_enabled:
+    get:
+      description: Check if resourceD is enabled
+      summary: Check if resourceD is enabled
+      tags:
+        - System API
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: boolean
+                example: true
+        

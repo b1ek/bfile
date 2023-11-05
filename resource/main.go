@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"net/http"
 	"io/ioutil"
 )
 
@@ -14,8 +15,9 @@ import (
 )
 
 type Resource struct {
-	Url		string `toml:"url"`
-	Mime	string `toml:"mime"`
+	Url		string 	`toml:"url"`
+	Proxied	bool	`toml:"proxied",default:false`
+	Mime	string 	`toml:"mime"`
 }
 func (self Resource) Get() ([]byte, error) {
 	return ioutil.ReadFile(self.Url[7:])
@@ -72,13 +74,30 @@ func main() {
 	})
 
 	app.Get("/:id", func (c *fiber.Ctx) error {
-
 		res, exists := conf.Resource[c.Params("id")]
 		if ! exists {
 			return c.Status(fiber.StatusNotFound).SendString("Resource not found")
 		}
 
 		if ! strings.HasPrefix(res.Url, "file://") {
+
+			if res.Proxied {
+				resp, err := http.Get(res.Url)
+				if err != nil {
+					log.Fatalln(err)
+				} else {
+					c.Response().Header.SetContentType(res.Mime)
+					// c.Response().Header.SetContentLength(resp.ContentLength)
+					buf, err := ioutil.ReadAll(resp.Body)
+					if err != nil {
+						log.Fatalln(err)
+						return c.Status(500).SendString("Internal error")
+					}
+
+					return c.Send(buf)
+				}
+			}
+			
 			c.Location(res.Url)
 			c.Status(302)
 			return nil

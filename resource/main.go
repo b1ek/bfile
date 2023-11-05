@@ -2,6 +2,9 @@ package main
 
 import (
 	"log"
+	"fmt"
+	"regexp"
+	"strings"
 	"io/ioutil"
 )
 
@@ -28,6 +31,19 @@ type Config struct {
 	Resource map[string]Resource `toml:"resource"`
 }
 
+func (self Config) Validate() int {
+	re, err := regexp.Compile(`^(file|http(s|))://`)
+	if err != nil { panic(err) }
+
+	for key, res := range self.Resource {
+		if ! re.MatchString(res.Url) {
+			panic(fmt.Sprintf("Resource %s has invalid URL: %s\nOnly file://, http:// and https:// URLs are allowed", key, res.Url))
+		}
+	}
+
+	return 0
+}
+
 func main() {
 	var conf Config
 	
@@ -37,6 +53,8 @@ func main() {
 	a, err := toml.Decode(string(data), &conf)
 	if err != nil { panic(err) }
 	_ = a
+
+	conf.Validate()
 	
 	app := fiber.New(fiber.Config {
 		Prefork:		true,
@@ -60,6 +78,12 @@ func main() {
 			return c.Status(fiber.StatusNotFound).SendString("Resource not found")
 		}
 
+		if ! strings.HasPrefix(res.Url, "file://") {
+			c.Location(res.Url)
+			c.Status(302)
+			return nil
+		}
+
 		data, err := res.Get()
 		if err != nil {
 			panic(err)
@@ -67,6 +91,7 @@ func main() {
 
 		c.Response().Header.SetContentType(res.Mime)
 		c.Response().Header.SetContentLength(len(data))
+
 		return c.Send(data)
 	})
 

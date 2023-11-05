@@ -45,6 +45,25 @@ func (self Config) Validate() int {
 
 	return 0
 }
+func (self Resource) GetProxied() ([]byte, error) {
+
+	cached, exists := ProxyResourceCache[self.Url];
+	if exists {
+		return cached, nil
+	}
+
+	resp, err := http.Get(self.Url)
+	if err != nil { return make([]byte, 0, 0), err }
+
+	buf, err := ioutil.ReadAll(resp.Body)
+	if err != nil { return make([]byte, 0, 0), err }
+
+	ProxyResourceCache[self.Url] = buf
+	
+	return buf, nil
+}
+
+var ProxyResourceCache map[string][]byte = make(map[string][]byte)
 
 func main() {
 	var conf Config
@@ -82,19 +101,15 @@ func main() {
 		if ! strings.HasPrefix(res.Url, "file://") {
 
 			if res.Proxied {
-				resp, err := http.Get(res.Url)
+				data, err := res.GetProxied()
 				if err != nil {
 					log.Fatalln(err)
+					// we failed, send a redirect instead
+					// (next executed line would be 115)
 				} else {
 					c.Response().Header.SetContentType(res.Mime)
-					// c.Response().Header.SetContentLength(resp.ContentLength)
-					buf, err := ioutil.ReadAll(resp.Body)
-					if err != nil {
-						log.Fatalln(err)
-						return c.Status(500).SendString("Internal error")
-					}
-
-					return c.Send(buf)
+					c.Response().Header.SetContentLength(len(data))
+					return c.Send(data)
 				}
 			}
 			

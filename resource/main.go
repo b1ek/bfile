@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"io/ioutil"
 )
@@ -14,6 +13,9 @@ import (
 type Resource struct {
 	Url		string `toml:"url"`
 	Mime	string `toml:"mime"`
+}
+func (self Resource) Get() ([]byte, error) {
+	return ioutil.ReadFile(self.Url[7:])
 }
 
 type ResourceDConfig struct {
@@ -36,20 +38,36 @@ func main() {
 	if err != nil { panic(err) }
 	_ = a
 	
-	app := fiber.New()
+	app := fiber.New(fiber.Config {
+		Prefork:		true,
+		CaseSensitive:	false,
+		StrictRouting:	true,
+		ServerHeader:	"",
+		AppName:		"blek! File resourceD",
+	})
+
+	app.Use(func (c *fiber.Ctx) error {
+		if ! conf.ResourceD.Enabled {
+			return c.Status(fiber.StatusNotFound).SendString("ResourceD is disabled")
+		}
+		return c.Next()
+	})
 
 	app.Get("/:id", func (c *fiber.Ctx) error {
-
-		if ! conf.ResourceD.Enabled {
-			return c.Status(fiber.StatusNotFound).SendString("Resource not found")
-		}
 
 		res, exists := conf.Resource[c.Params("id")]
 		if ! exists {
 			return c.Status(fiber.StatusNotFound).SendString("Resource not found")
 		}
 
-		return c.SendString(fmt.Sprintf("Id: %s\nUrl: %s\nType: %s", c.Params("id"), res.Url, res.Mime))
+		data, err := res.Get()
+		if err != nil {
+			panic(err)
+		}
+
+		c.Response().Header.SetContentType(res.Mime)
+		c.Response().Header.SetContentLength(len(data))
+		return c.Send(data)
 	})
 
 	log.Fatal(app.Listen(conf.ResourceD.ListenURL))

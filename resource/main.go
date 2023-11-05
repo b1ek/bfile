@@ -12,6 +12,7 @@ import (
 import (
 	"github.com/BurntSushi/toml"
 	"github.com/gofiber/fiber/v2"
+	"github.com/dustin/go-humanize"
 )
 
 type Resource struct {
@@ -24,8 +25,9 @@ func (self Resource) Get() ([]byte, error) {
 }
 
 type ResourceDConfig struct {
-	Enabled		bool `toml:"enabled"`
-	ListenURL	string `toml:"listen_url"`
+	Enabled				bool 	`toml:"enabled"`
+	ListenURL			string 	`toml:"listen_url"`
+	ProxyCacheMinSize	string	`toml:"proxy_cache_min_size",default:5MB`
 }
 
 type Config struct {
@@ -58,12 +60,16 @@ func (self Resource) GetProxied() ([]byte, error) {
 	buf, err := ioutil.ReadAll(resp.Body)
 	if err != nil { return make([]byte, 0, 0), err }
 
-	ProxyResourceCache[self.Url] = buf
+	// cache only those that are less than 5 mb
+	if len(buf) > ProxyCacheMinSize {
+		ProxyResourceCache[self.Url] = buf
+	}
 	
 	return buf, nil
 }
 
 var ProxyResourceCache map[string][]byte = make(map[string][]byte)
+var ProxyCacheMinSize int
 
 func main() {
 	var conf Config
@@ -74,6 +80,10 @@ func main() {
 	a, err := toml.Decode(string(data), &conf)
 	if err != nil { panic(err) }
 	_ = a
+
+	cache_min, err := humanize.ParseBytes(conf.ResourceD.ProxyCacheMinSize)
+	if err != nil { panic(err) }
+	ProxyCacheMinSize = int(cache_min)
 
 	conf.Validate()
 	

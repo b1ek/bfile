@@ -19,7 +19,6 @@ ListenUrl="0.0.0.0:80"
 # dev.indie_guy.logo
 # com.pany.logo
 # Test your names here: https://regex101.com/r/wQdOup/2
-# 
 [Resource."com.example.logo"]
 # Can also be an external link
 # If an external link is specified,
@@ -29,3 +28,14 @@ Url="file:///some/where"
 # File type, as according to this:
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
 mime="image/jpg"
+
+# (if url is an http(s) url))
+# Whether to proxy the resource.
+# true  - Send the resource like a regular file
+# false - Send a 302 HTTP redirect to the URL (default)
+#
+# It is not recommended to set this to `true`
+# unless you are referring to a resource that is
+# available only in the local network
+# 
+# proxied=true

@@ -119,7 +119,8 @@ func main() {
 				if err != nil {
 					log.Fatalln(err)
 					// we failed, send a redirect instead
-					// (next executed line would be 115)
+					// the next line would be the one with
+					// c.Location(res.Url)
 				} else {
 					c.Response().Header.SetContentType(res.Mime)
 					c.Response().Header.SetContentLength(len(data))

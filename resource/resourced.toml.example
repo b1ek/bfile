@@ -11,6 +11,11 @@ Enabled=true
 # URL to listen on
 ListenUrl="0.0.0.0:80"
 
+# Minibal size of a file to be cached
+# File size is parsed via this library:
+# https://github.com/dustin/go-humanize
+proxy_cache_min_size="5MB"
+
 # Resource ID must be like a java package name
 # At least one X.X. is required
 # 

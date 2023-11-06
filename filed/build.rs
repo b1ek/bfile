@@ -9,6 +9,12 @@ fn asset_path(asset: &PathBuf) -> PathBuf {
     path
 }
 
+fn template_path(template: &PathBuf) -> PathBuf {
+    let mut path = template.components().take(template.components().count() - 2).collect::<PathBuf>();
+    path.push(template.components().last().unwrap());
+    path
+}
+
 fn extfilter(valid: String, x: Option<&OsStr>) -> bool {
     if x.is_none() {
         return false
@@ -33,6 +39,7 @@ fn system(cmd: &str, args: &[&str]) -> Result<String, Box<dyn Error>> {
 fn main() {
 
     println!("cargo:rerun-if-changed=static/assets");
+    println!("cargo:rerun-if-changed=templates/source");
 
     let assets = fs::read_dir("static/assets").unwrap();
     let assets = assets
@@ -71,6 +78,27 @@ fn main() {
             .arg("-c")
             .spawn()
             .unwrap();
+    });
+
+    // precompile templates
+    let templates = fs::read_dir("templates/source").unwrap();
+    let templates = templates
+        .map(|x| x.unwrap().path().canonicalize().unwrap())
+        .filter(|x| extfilter("html".into(), x.extension()))
+        .collect::<Vec<PathBuf>>();
+    
+    templates.iter().for_each(|template| {
+        Command::new("html-minifier")
+            .arg(template.canonicalize().unwrap())
+            .arg("--collapse-whitespace")
+            // .arg("--minify-js")
+            // .arg("--minify-css")
+            // .arg("--keep-closing-slash")
+            .arg("--output")
+            .arg(template_path(template))
+            .spawn()
+            .unwrap();
+        
     });
 
     let commit = system("git", &["rev-parse", "HEAD"]).map_err(|x| x.to_string());

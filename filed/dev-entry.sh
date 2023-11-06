@@ -5,4 +5,4 @@ cd /opt/code
 cargo check
 cargo build
 
-cargo watch -w src -w templates -w static -x run
+cargo watch -w src -w templates/source -w static -x run

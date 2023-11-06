@@ -96,19 +96,18 @@
 <script src="https://unpkg.com/clipboard@2/dist/clipboard.min.js"></script>
 <script>
     new ClipboardJS('.copy-btn');
-{#- -#}
-    ( {#- -#}
-        () => { {#- -#}
-            let btns = document.getElementsByClassName('copy-btn') {#- -#}
-            for (const button of btns) { {#- -#}
-                button.onclick = () => { {#- -#}
-                    let old = button.innerHTML; {#- -#}
-                    button.innerHTML = 'Copied!'; {#- -#}
-                    setTimeout(() => { button.innerHTML = old }, 500); {#- -#}
-                } {#- -#}
-            } {#- -#}
-        } {#- -#}
-    )() {#- -#}
+    (
+        () => {
+            let btns = document.getElementsByClassName('copy-btn')
+            for (const button of btns) {
+                button.onclick = () => {
+                    let old = button.innerHTML;
+                    button.innerHTML = 'Copied!';
+                    setTimeout(() => { button.innerHTML = old }, 500);
+                }
+            }
+        }
+    )()
 </script>
 <script src='/js-only.js'></script>
 {% endblock %}

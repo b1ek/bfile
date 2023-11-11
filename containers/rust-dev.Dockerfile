@@ -7,6 +7,6 @@ RUN cargo install cargo-watch && \
 
 RUN apt update && \
     apt install nodejs npm -y --no-install-recommends && \
-    npm i -g uglify-js
+    npm i -g uglify-js html-minifier
 
 CMD [ "/opt/code/dev-entry.sh" ]

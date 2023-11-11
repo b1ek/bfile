@@ -86,6 +86,10 @@ func main() {
 	ProxyCacheMinSize = int(cache_min)
 
 	conf.Validate()
+
+	if ! conf.ResourceD.Enabled {
+		fmt.Println("\x1b[33m[warn] resourceD is disabled. No resources will be served\x1b[0m")
+	}
 	
 	app := fiber.New(fiber.Config {
 		Prefork:		true,

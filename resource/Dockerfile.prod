@@ -1,0 +1,22 @@
+FROM golang:alpine3.17 as builder
+
+WORKDIR /opt/build
+COPY . .
+
+RUN apk add --no-cache git musl-dev upx binutils
+
+RUN go build . && \
+    strip resourced && \
+    upx   resourced
+
+FROM alpine:3.17
+
+WORKDIR /opt/code
+COPY --from=builder /opt/build/resourced /usr/bin/resourced
+
+# Note
+# -----
+# Since this is running with prefork, don't
+# forget to set --pid=host when running this app
+
+CMD [ "sh", "-c", "/usr/bin/resourced" ]

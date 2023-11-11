@@ -19,6 +19,15 @@ services:
         volumes:
             - './janitor:/config:ro'
             - './volatile/files:/opt/user_uploads'
+    resourced:
+        build:
+            context: resource
+            dockerfile: Dockerfile.prod
+        networks:
+            bfile:
+        pid: host # prefork
+        volumes:
+            - './resource:/opt/cont'
     caddy:
         image: caddy:alpine
         volumes:

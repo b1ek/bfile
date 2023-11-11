@@ -21,6 +21,15 @@ services:
         volumes:
             - './janitor:/opt/code'
             - './volatile/files:/opt/user_uploads'
+    resourced:
+        build:
+            context: containers
+            dockerfile: go-dev.Dockerfile
+        networks:
+            bfile:
+        volumes:
+            - './resource:/opt/code'
+            - '/opt/code/tmp'
     caddy:
         image: caddy:alpine
         volumes:

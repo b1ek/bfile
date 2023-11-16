@@ -7,6 +7,7 @@ import (
 	"strings"
 	"net/http"
 	"io/ioutil"
+	"encoding/json"
 )
 
 import (
@@ -19,6 +20,9 @@ type Resource struct {
 	Url		string 	`toml:"url"`
 	Proxied	bool	`toml:"proxied",default:false`
 	Mime	string 	`toml:"mime"`
+}
+type CheckResourceType struct {
+	Type 	string	`json:"type"`
 }
 func (self Resource) Get() ([]byte, error) {
 	return ioutil.ReadFile(self.Url[7:])
@@ -114,6 +118,34 @@ func main() {
 			return c.Status(fiber.StatusNotFound).SendString("ResourceD is disabled")
 		}
 		return c.Next()
+	})
+	app.Post("/internal/check_resource", func (c *fiber.Ctx) error {
+
+		resources := new([]string)
+		err := json.Unmarshal(c.Body(), &resources)
+
+		if err != nil {
+			log.Fatalln(err)
+			return c.Send([]byte("{ \"error\": \"500\"}"))
+		}
+
+		resources_exist := make(map[string]CheckResourceType)
+
+		for _, resource := range *resources {
+			if val, ok := conf.Resource[resource]; ok {
+				resources_exist[resource] = CheckResourceType {
+					Type: val.Mime,
+				}
+			}
+		}
+
+		marshaled, err := json.Marshal(resources_exist)
+		if err != nil {
+			log.Fatalln(err)
+			return c.Send([]byte("{ \"error\": \"500\"}"))
+		}
+
+		return c.Send([]byte(marshaled))
 	})
 
 	app.Get("/:id", func (c *fiber.Ctx) error {

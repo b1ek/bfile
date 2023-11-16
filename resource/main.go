@@ -87,6 +87,12 @@ func main() {
 
 	conf.Validate()
 
+	if len(conf.Resource) == 0 {
+		fmt.Println("\x1b[33m[warn] No resources are specified\x1b[0m");
+	} else {
+		fmt.Println(fmt.Sprintf("[info] Loaded %d resources", len(conf.Resource)))
+	}
+
 	if ! conf.ResourceD.Enabled {
 		fmt.Println("\x1b[33m[warn] resourceD is disabled. No resources will be served\x1b[0m")
 	}

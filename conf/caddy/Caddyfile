@@ -4,6 +4,9 @@
         uri * strip_prefix /qr
         reverse_proxy http://qr
     }
+    handle /resource/internal/* {
+        respond 403
+    }
     handle /resource/* {
         uri * strip_prefix /resource
         reverse_proxy http://resourced

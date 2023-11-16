@@ -14,6 +14,8 @@ tags:
     description: API for serving data
   - name: System API
     description: API for serving system data
+  - name: Internal API
+    description: API for microservices. Shouldn't be accessible via WAN
 
 paths:
   /{id}:
@@ -45,4 +47,47 @@ paths:
               schema:
                 type: boolean
                 example: true
-        
+  /internal/check_resource:
+    post:
+      summary: Check if a resource(s) exist
+      description: |-
+        This method takes an array of resources and reports which ones exist.
+
+        See responses for more info.
+      tags:
+        - Internal API
+      requestBody:
+        description: |-
+          An array of strings, where each string is a resource ID
+
+          Let's assume that we want to check if two resources exist: `dev.blek.file.logo` and `org.nonexistant.resource`.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+            example:
+              - dev.blek.file.logo
+              - org.nonexistant.resource
+      responses:
+        200:
+          description: |-
+            As in the request body example, let's assume that this method checked if these two resources exist:
+             - `dev.blek.file.logo`
+             - `org.nonexistant.resource`
+            
+            As we can see, this returned only `dev.blek.file.logo` because its the only resource of the provided ones that exist.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                    
+                example:
+                  dev.blek.file.logo:
+                    type: image/png

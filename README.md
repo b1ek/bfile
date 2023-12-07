@@ -24,6 +24,9 @@ To qualify, your instance must be having:
 3. Come up with a unique name
 4. Have a public administrator email
 
+## Contributing
+Contributing guide is available [here](./CONTRIBUTING.md) (the CONTRIBUTING.md file).
+
 ## Licensing
 This software is released under GPL3 license, a copyleft license that protects users' freedom by ensuring that all future copies of this software are open source as well.
 

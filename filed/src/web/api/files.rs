@@ -24,3 +24,4 @@ fn function_disabled_err() -> WithStatus<Json> {
 }
 
 pub mod get_all;
+pub mod delete;

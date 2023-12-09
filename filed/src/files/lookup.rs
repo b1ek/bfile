@@ -109,11 +109,22 @@ impl FileManager {
         
         match kind {
             LookupKind::ByName => {
-                if (&file).name.is_none() {
+                if let Some(name) = file.name.clone() {
+                    log::debug!("Using {} as a custom file name", name);
+                    return Ok(self.save_int(
+                        &file,
+                        format!(
+                            "{}{}{}",
+                            self.env.redis.prefix,
+                            midfix,
+                            name
+                        )
+                    )?)
+                } else {
                     return Err("Filename can't be None when LookupKind is ByName!".into())
                 }
             }
-            _ => ()
+            _ => log::debug!("No custom file name detected")
         }
 
         self.save_int(
@@ -122,10 +133,7 @@ impl FileManager {
                 "{}{}{}",
                 self.env.redis.prefix,
                 midfix,
-                match kind {
-                    LookupKind::ByName => (&file).name.as_ref().unwrap().clone(),
-                    LookupKind::ByHash => (&file).hash()
-                }
+                file.hash()
             )
         )
     }

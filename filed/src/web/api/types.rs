@@ -3,6 +3,7 @@ use serde::{Serialize, Deserialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Error {
     APIDisabled,
+    APIFunctionDisabled
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -15,7 +16,8 @@ impl ErrorMessage {
     pub fn new(error: Error) -> ErrorMessage {
         ErrorMessage {
             details: match error {
-                Error::APIDisabled => Some("API is disabled by the administrator. Please contact them for further details".into())
+                Error::APIDisabled          => Some("API is disabled by the administrator. Please contact them for further details".into()),
+                Error::APIFunctionDisabled  => Some("This API function is disabled by the administrator. Please contact them for further details.".into())
             },
             error,
         }

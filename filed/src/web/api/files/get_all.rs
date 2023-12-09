@@ -2,11 +2,15 @@ use warp::{reply::{Reply, json}, reject::Rejection, Filter};
 
 use crate::web::{state::SharedState, rejection::HttpReject};
 
-use super::check_api_enabled;
+use super::{check_api_enabled, function_disabled_err};
 
 pub async fn get_all(state: SharedState) -> Result<Box<dyn Reply>, Rejection> {
     if let Err(res) = check_api_enabled(&state) {
-        return Ok(Box::new(res));
+        return Ok(Box::new(res))
+    }
+
+    if ! state.config.api.get_all {
+        return Ok(Box::new(function_disabled_err()))
     }
 
     Ok(

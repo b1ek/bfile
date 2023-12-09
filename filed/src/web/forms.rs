@@ -95,7 +95,7 @@ impl UploadFormData {
                 if val.is_checked() {
                     let name = data.get("filename")?;
                     out.filename = Some(name.as_atr_or_none()?);
-                    out.lookup_kind = LookupKind::ByHash
+                    out.lookup_kind = LookupKind::ByName
                 }
             },
             None => ()
@@ -107,7 +107,6 @@ impl UploadFormData {
                 if val.is_checked() {
                     let pass = data.get("password")?;
                     out.password = Some(pass.as_atr_or_none()?);
-                    out.lookup_kind = LookupKind::ByName
                 }
             },
             None => ()

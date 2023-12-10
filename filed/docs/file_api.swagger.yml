@@ -125,6 +125,9 @@ paths:
                     name:
                       type: string
                       description: Optional name of the file so it would be accessible like file.blek.codes/uploads/{name}
+                    pass:
+                      type: string
+                      description: Optional password protection for the file
       responses:
         200:
           description: File uploaded successfully

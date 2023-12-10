@@ -102,10 +102,6 @@ impl FileManager {
 
     pub fn save(self: &Self, file: &File, kind: LookupKind) -> Result<(), Box<dyn Error>> {
         let file = file.clone();
-        let midfix = match kind {
-            LookupKind::ByName => "-name-",
-            LookupKind::ByHash => "-hash-"
-        };
         
         match kind {
             LookupKind::ByName => {
@@ -114,9 +110,8 @@ impl FileManager {
                     return Ok(self.save_int(
                         &file,
                         format!(
-                            "{}{}{}",
+                            "{}-name-{}",
                             self.env.redis.prefix,
-                            midfix,
                             name
                         )
                     )?)
@@ -130,9 +125,8 @@ impl FileManager {
         self.save_int(
             &file,
             format!(
-                "{}{}{}",
+                "{}-hash-{}",
                 self.env.redis.prefix,
-                midfix,
                 file.hash()
             )
         )

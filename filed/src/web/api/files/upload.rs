@@ -82,6 +82,38 @@ impl UploadAPIPayload {
 
 pub async fn upload(state: SharedState, data: FormData, ip: Option<IpAddr>) -> Result<Box<dyn Reply>, Rejection> {
 
+    if (!state.config.api.enabled) || (!state.config.api.upload) {
+        return Ok(
+            Box::new(
+                with_status(
+                    json(&ErrorMessage::new(Error::APIDisabled)),
+                    StatusCode::UNAUTHORIZED
+                )
+            )
+        )
+    }
+
+    if ! state.config.files.allow_uploads {
+        return Ok(
+            Box::new(
+                with_status(
+                    json(
+                        &ErrorMessage {
+                            error: Error::APIDisabled,
+                            details: Some(
+                                match state.config.files.upload_disable_reason {
+                                    Some(reason) => format!("Uploads were disabled for the following reason: {reason}"),
+                                    None => format!("Uploads were disabled by the administrator")
+                                }
+                            )
+                        }
+                    ),
+                    StatusCode::UNAUTHORIZED
+                )
+            )
+        )
+    }
+
     let data = FormElement::from_formdata(data)
         .await;
 

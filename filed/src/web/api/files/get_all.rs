@@ -9,7 +9,7 @@ pub async fn get_all(state: SharedState) -> Result<Box<dyn Reply>, Rejection> {
         return Ok(Box::new(res))
     }
 
-    if ! state.config.api.get_all {
+    if (!state.config.api.get_all) || (!state.config.api.enabled) {
         return Ok(Box::new(function_disabled_err()))
     }
 

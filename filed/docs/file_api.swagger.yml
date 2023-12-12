@@ -131,6 +131,13 @@ paths:
       responses:
         200:
           description: File uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    example: 'OK'
         401:
           description: |-
             This error code is returned if one of the two conditions are met:
@@ -139,6 +146,15 @@ paths:
             2. The instance requires API key for all API manipulations.
             3. The provided API key is invalid.
             4. API authorization is not enabled, but a key is provided
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    example: 'APIPasswordDenied'
+                  details:
+                    example: 'API password authorization has been denied.'
 
 components:
 

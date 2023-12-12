@@ -20,10 +20,10 @@ use state::SharedState;
 pub fn routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
     static_dir!("static")
         .or(curlapi::get_routes(state.clone()))
-        .or(pages::get_routes(state.clone()))
         .or(forms::get_routes(state.clone()))
         .or(api::get_routes(state.clone()))
-        .or(uploaded::get_uploaded(state))
+        .or(uploaded::get_uploaded(state.clone()))
+        .or(pages::get_routes(state))
 }
 
 /*

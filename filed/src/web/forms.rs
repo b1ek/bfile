@@ -307,7 +307,8 @@ pub async fn upload(form: FormData, ip: Option<IpAddr>, state: SharedState) -> R
 }
 
 pub fn get_routes(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
-    warp::post()
+    warp::path("upload")
+        .and(warp::post())
         .and(warp::multipart::form())
         .and(real_ip(vec![state.env.proxy_addr]))
         .and(

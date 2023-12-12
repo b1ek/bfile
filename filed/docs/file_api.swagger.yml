@@ -102,6 +102,8 @@ paths:
       security:
         - apikey: [ key ]
       requestBody:
+        description: |-
+          A multipart form
         content:
           multipart/form-data:
             schema:
@@ -117,7 +119,18 @@ paths:
                   description: Instance-specific password needed to upload files
                 metadata:
                   type: object
-                  description: file info
+                  description: |-
+                    JSON object with file info:
+                    
+                    ```
+                    {
+                      sha512: string,
+                      name?: string,
+                      pass?: string
+                    }
+                    ```
+
+                    Note that the content type does not matter on this one.
                   properties:
                     sha512:
                       type: string
@@ -140,7 +153,7 @@ paths:
                     example: 'OK'
         401:
           description: |-
-            This error code is returned if one of the two conditions are met:
+            This error code is returned if one of the 4 conditions are met:
 
             1. The instance does not allow API file uploads.
             2. The instance requires API key for all API manipulations.
@@ -155,6 +168,18 @@ paths:
                     example: 'APIPasswordDenied'
                   details:
                     example: 'API password authorization has been denied.'
+        403:
+          description: |-
+            This error code is returned if your request payload is malformed or the hash doesn't match the file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    example: 'APIError'
+                  details:
+                    example: 'Request payload invalid'
 
 components:
 

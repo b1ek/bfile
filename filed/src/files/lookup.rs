@@ -2,6 +2,7 @@
 use std::error::Error;
 
 use redis::{Client, Commands, AsyncCommands, Connection};
+use tokio::task::JoinSet;
 
 use crate::env::Env;
 
@@ -25,23 +26,18 @@ impl FileManager {
 
     async fn find_all(self: &Self, predicate: String) -> Result<Vec<File>, Box<dyn Error>> {
         let mut conn = self.conn.get_async_connection().await?;
-        let found: Vec<String> = conn.keys(predicate).await?;
-        let serialized: Vec<File> = 
-                found.iter()
-                    .map(|x| {
-                        let result = serde_json::from_str(&x);
-                        match result {
-                            Ok(x) => Some(x),
-                            Err(err) => {
-                                log::error!("Error while serializing {x}: {:?}", err);
-                                None
-                            }
-                        }
-                    })
-                    .filter(|x| x.is_some())
-                    .map(|x| x.unwrap())
-                    .collect();
-        Ok(serialized)
+        let keys: Vec<String> = conn.keys(predicate).await?;
+
+        let mut data: Vec<File> = vec![];
+
+        for key in keys.iter() {
+            let raw: String = conn.get(key.clone()).await?;
+
+            let mut parsed: File = serde_json::from_str(raw.as_str())?;
+            data.push(parsed);
+        }
+
+        Ok(data)
     }
 
     /// Filter options

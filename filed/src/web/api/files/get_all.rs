@@ -3,7 +3,7 @@ use std::net::IpAddr;
 use warp::{reply::{Reply, json, with_status}, reject::Rejection, Filter, http::StatusCode};
 use warp_real_ip::real_ip;
 
-use crate::web::{state::SharedState, rejection::HttpReject, api::types::{ErrorMessage, Error}};
+use crate::web::{state::SharedState, api::types::{ErrorMessage, Error}};
 
 use super::{check_api_enabled, function_disabled_err};
 

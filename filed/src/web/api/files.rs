@@ -49,10 +49,10 @@ fn check_api_pass(state: &SharedState, key: String) -> Result<(), WithStatus<Jso
     }
 }
 
-fn function_disabled_err() -> WithStatus<Json> {
+fn function_disabled_err(status: StatusCode) -> WithStatus<Json> {
     warp::reply::with_status(
         json(&ErrorMessage::new(Error::APIFunctionDisabled)),
-        StatusCode::SERVICE_UNAVAILABLE
+        status
     )
 }
 

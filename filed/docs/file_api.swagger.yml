@@ -74,7 +74,7 @@ paths:
                 example: {}
         401:
           description: |-
-            This error code is returned if one of the two conditions are met:
+            This error code is returned if one of these conditions are met:
 
             1. The instance does not allow deleting files via API.
             2. The file has been uploaded from another IP, which is not this one, and the API was not authorized via an API key.
@@ -90,6 +90,9 @@ paths:
                 fid:
                   type: string
                   example: ID or name of the file. It is the NAME in file.blek.codes/uploads/NAME
+                api_key:
+                  type: string
+                  example: '123'
   /api/files/upload:
     post:
       summary: Upload a file

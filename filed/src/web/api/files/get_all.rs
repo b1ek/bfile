@@ -13,7 +13,7 @@ pub async fn get_all(state: SharedState, ip: Option<IpAddr>) -> Result<Box<dyn R
     }
 
     if (!state.config.api.get_all) || (!state.config.api.enabled) {
-        return Ok(Box::new(function_disabled_err()))
+        return Ok(Box::new(function_disabled_err(StatusCode::UNAUTHORIZED)))
     }
 
     let found = 

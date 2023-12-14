@@ -1,4 +1,4 @@
-use std::{collections::HashMap, net::IpAddr};
+use std::net::IpAddr;
 
 use serde_json::json;
 use warp::{reply::{Reply, json, with_status}, reject::Rejection, Filter, http::StatusCode};
@@ -105,7 +105,22 @@ pub async fn delete(state: SharedState, body: DeleteFunctionPayload, ip: Option<
         )
     }
 
-    file.delete(state).await;
+    let res = file.delete(state).await;
+    if let Err(err) = res {
+        return Ok(
+            Box::new(
+                with_status(
+                    json(
+                        &ErrorMessage {
+                            error: Error::APIError,
+                            details: Some(format!("Couldn't delete file: {}", err))
+                        }
+                    ),
+                    StatusCode::INTERNAL_SERVER_ERROR
+                )
+            )
+        )
+    }
 
     Ok(Box::new(json(&json!({}))))
 }

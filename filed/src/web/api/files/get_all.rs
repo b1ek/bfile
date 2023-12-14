@@ -48,7 +48,6 @@ pub async fn get_all(state: SharedState, ip: Option<IpAddr>) -> Result<Box<dyn R
                     |x| {
                         if let Some(owner) = x.uploader_ip {
                             if let Some(caller) = ip {
-                                println!("{owner} {caller}");
                                 return owner == caller
                             }
                         }

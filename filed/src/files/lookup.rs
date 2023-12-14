@@ -2,7 +2,6 @@
 use std::error::Error;
 
 use redis::{Client, Commands, AsyncCommands, Connection};
-use tokio::task::JoinSet;
 
 use crate::env::Env;
 

@@ -1,5 +1,6 @@
 use std::{collections::HashMap, net::IpAddr};
 
+use serde_json::json;
 use warp::{reply::{Reply, json, with_status}, reject::Rejection, Filter, http::StatusCode};
 use serde::{Serialize, Deserialize};
 use warp_real_ip::real_ip;
@@ -106,7 +107,7 @@ pub async fn delete(state: SharedState, body: DeleteFunctionPayload, ip: Option<
 
     file.delete(state).await;
 
-    Ok(Box::new(json(&HashMap::<(), ()>::new())))
+    Ok(Box::new(json(&json!({}))))
 }
 
 pub fn delete_f(state: SharedState) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {

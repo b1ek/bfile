@@ -6,7 +6,7 @@ COPY filed .
 COPY ./.git ./.git
 
 RUN apk add --no-cache git musl-dev upx nodejs yarn && \
-    yarn global add uglify-js@3.17.4
+    yarn global add uglify-js@3.17.4 html-minifier
 
 RUN cargo b -r
 RUN strip target/release/filed && upx --best target/release/filed
